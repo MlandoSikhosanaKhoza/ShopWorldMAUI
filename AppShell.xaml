@@ -3,12 +3,21 @@
     x:Class="ShopWorld.MAUI.AppShell"
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-    xmlns:local="clr-namespace:ShopWorld.MAUI"
+    xmlns:views="clr-namespace:ShopWorld.MAUI.Views"
     Shell.FlyoutBehavior="Disabled">
-
-    <ShellContent
+    <!--Here is the Start Up as soon as the app starts running it enters this navigation stack-->
+    <ShellItem>
+        <ShellContent
         Title="Home"
-        ContentTemplate="{DataTemplate local:MainPage}"
-        Route="MainPage" />
+        ContentTemplate="{DataTemplate views:StartUpPage}"
+        Route="StartUpPage" />
+    </ShellItem>
+    <!--Here is the Login Page which is access when the user isn't logged in-->
+    <ShellItem>
+        <ShellContent
+        Title="Home"
+        ContentTemplate="{DataTemplate views:LoginPage}"
+        Route="LoginPage" />
+    </ShellItem>
 
 </Shell>

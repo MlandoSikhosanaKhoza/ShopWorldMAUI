@@ -4,10 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ShopWorld.MAUI.Services
+namespace ShopWorld.MAUI.ViewModels
 {
-    public class HttpClientService
+    public partial class LoginViewModel:BaseViewModel
     {
-
     }
 }

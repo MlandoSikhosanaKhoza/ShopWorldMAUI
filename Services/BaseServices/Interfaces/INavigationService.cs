@@ -6,7 +6,9 @@ using System.Threading.Tasks;
 
 namespace ShopWorld.MAUI.Services
 {
-    public class AuthorizationService
+    public interface INavigationService
     {
+        Task NavigateToAsync(string route, IDictionary<string, object> routeParameters = null);
+        Task PopAsync();
     }
 }
