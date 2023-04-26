@@ -8,14 +8,12 @@ using System.Threading.Tasks;
 
 namespace ShopWorld.MAUI.Services
 {
-    public class UserManagementService
+    public class UserManagementService:IUserManagementService
     {
         private readonly ShopWorldClient _shopWorldClient;
-        private readonly IAuthorizationService _authorizationService;
-        public UserManagementService(ShopWorldClient shopWorldClient, IAuthorizationService authorizationService)
+        public UserManagementService(ShopWorldClient shopWorldClient)
         {
             _shopWorldClient = shopWorldClient;
-            _authorizationService = authorizationService;
         }
 
         public async Task<LoginResult> LoginAsUser(string Mobile)
