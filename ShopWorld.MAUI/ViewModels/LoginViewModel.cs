@@ -34,7 +34,7 @@ namespace ShopWorld.MAUI.ViewModels
             if (loginResult.IsAuthorized)
             {
                 await _authorizationService.SetLoginToken(loginResult.JwtToken);
-                await _navigationService.NavigateToAsync($"//{nameof(ShoppingPage)}");
+                await _navigationService.NavigateToAsync($"//ShoppingPageLoggedIn");
             }
             else
             {

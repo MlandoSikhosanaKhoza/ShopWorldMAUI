@@ -48,18 +48,18 @@ namespace ShopWorld.MAUI.ViewModels
             }
             IsBusy = true;
             /* Download the items I can purchase */
-            //await _itemService.CheckAndDownload();
+            await _itemService.CheckAndDownload();
 
             /* Check secure storage for JWT Token and store it in a string */
-            //await _authorizationService.ProcessTokenAsync();
+            await _authorizationService.ProcessTokenAsync();
             if (_authorizationService.IsValidToken())
             {
                 /*Check if the user is admin or customer */
                 string role = JwtTokenReader.GetTokenValue(_authorizationService.GetToken(),ClaimTypes.Role);
                 switch (role)
                 {
-                    case "User":
-                        await _navigationService.NavigateToAsync($"//{nameof(ShoppingPage)}");
+                    case "Customer":
+                        await _navigationService.NavigateToAsync($"//ShoppingPageLoggedIn");
                         break;
                     case "Admin":
                         

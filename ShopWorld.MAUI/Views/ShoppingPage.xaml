@@ -5,8 +5,11 @@
              Title="ShoppingPage">
     <VerticalStackLayout>
         <Label 
-            Text="Welcome to .NET MAUI!"
-            VerticalOptions="Center" 
-            HorizontalOptions="Center" />
+            Text="Shopping"
+            VerticalOptions="Center" FontSize="Large"
+            HorizontalOptions="Center" Margin="24" />
+        <StackLayout>
+            
+        </StackLayout>
     </VerticalStackLayout>
 </ContentPage>

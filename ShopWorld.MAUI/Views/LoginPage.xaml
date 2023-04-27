@@ -2,11 +2,18 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="ShopWorld.MAUI.Views.LoginPage"
-             Title="LoginPage">
-    <VerticalStackLayout>
+             xmlns:viewModels="clr-namespace:ShopWorld.MAUI.ViewModels"
+             x:DataType="viewModels:LoginViewModel"
+             Title="Login">
+    <StackLayout Orientation="Vertical" VerticalOptions="FillAndExpand">
         <Label 
-            Text="Welcome to .NET MAUI!"
-            VerticalOptions="Center" 
-            HorizontalOptions="Center" />
-    </VerticalStackLayout>
+            Text="Login"
+            VerticalOptions="Center" FontSize="Large"
+            HorizontalOptions="Center" Margin="24" />
+        <Image  Margin="4" WidthRequest="{OnIdiom Desktop=300,Tablet=200,Phone=120,Default=250}" HeightRequest="{OnIdiom Desktop=300,Tablet=200,Phone=120,Default=250}" Source="shop_world_logo.png">
+
+        </Image>
+        <Entry Placeholder="Enter your number" Text="{Binding MobileNumber}" Margin="4" WidthRequest="{OnIdiom Desktop=300,Tablet=200,Phone=120,Default=250}"/>
+        <Button Text="Login" Margin="4" Command="{Binding LoginCommand}"  WidthRequest="{OnIdiom Desktop=300,Tablet=200,Phone=120,Default=250}"></Button>
+    </StackLayout>
 </ContentPage>
