@@ -20,4 +20,10 @@
         Route="LoginPage" />
     </ShellItem>
 
+    <ShellItem>
+        <ShellContent
+        Title="Shopping"
+        ContentTemplate="{DataTemplate views:ShoppingPage}"
+        Route="ShoppingPage" />
+    </ShellItem>
 </Shell>

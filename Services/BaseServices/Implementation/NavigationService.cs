@@ -19,8 +19,8 @@ namespace ShopWorld.MAUI.Services
         public Task InitializeAsync() =>
             NavigateToAsync(
                 string.IsNullOrEmpty(_authorizationService.GetToken())
-                    ? $"//{nameof(LoginPage)}"
-                    : "//Main/Catalog");
+                    ? $"//{nameof(StartUpPage)}"
+                    : $"//{nameof(ShoppingPage)}");
 
         public Task NavigateToAsync(string route, IDictionary<string, object> routeParameters = null)
         {

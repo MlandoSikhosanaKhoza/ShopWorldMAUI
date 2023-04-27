@@ -1,9 +1,16 @@
+using ShopWorld.MAUI.ViewModels;
+
 namespace ShopWorld.MAUI.Views;
 
 public partial class LoginPage : ContentPage
 {
-	public LoginPage()
+    private LoginViewModel _viewModel;
+    public LoginPage(LoginViewModel viewModel)
 	{
 		InitializeComponent();
+		BindingContext=_viewModel=viewModel;
 	}
+
+	
+
 }
