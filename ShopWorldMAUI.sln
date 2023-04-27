@@ -1,0 +1,33 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31611.283
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ShopWorld.MAUI", "ShopWorld.MAUI\ShopWorld.MAUI.csproj", "{EEE0E97F-313A-46D5-9441-EAD6D77018AB}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ShopWorld.Shared", "ShopWorld.Shared\ShopWorld.Shared.csproj", "{E9FFE510-A296-4E43-8290-68A0B8CE9DF8}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{EEE0E97F-313A-46D5-9441-EAD6D77018AB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EEE0E97F-313A-46D5-9441-EAD6D77018AB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EEE0E97F-313A-46D5-9441-EAD6D77018AB}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
+		{EEE0E97F-313A-46D5-9441-EAD6D77018AB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EEE0E97F-313A-46D5-9441-EAD6D77018AB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EEE0E97F-313A-46D5-9441-EAD6D77018AB}.Release|Any CPU.Deploy.0 = Release|Any CPU
+		{E9FFE510-A296-4E43-8290-68A0B8CE9DF8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E9FFE510-A296-4E43-8290-68A0B8CE9DF8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E9FFE510-A296-4E43-8290-68A0B8CE9DF8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E9FFE510-A296-4E43-8290-68A0B8CE9DF8}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {61F7FB11-1E47-470C-91E2-47F8143E1572}
+	EndGlobalSection
+EndGlobal
