@@ -1,15 +1,30 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:viewModels="clr-namespace:ShopWorld.MAUI.ViewModels"
+             xmlns:model="clr-namespace:ShopWorld.MAUI.Models"
              x:Class="ShopWorld.MAUI.Views.ShoppingPage"
+             x:DataType="viewModels:ShoppingViewModel"
              Title="ShoppingPage">
     <VerticalStackLayout>
         <Label 
             Text="Shopping"
             VerticalOptions="Center" FontSize="Large"
             HorizontalOptions="Center" Margin="24" />
-        <StackLayout>
-            
-        </StackLayout>
+        <FlexLayout BindableLayout.ItemsSource="{Binding Items}" JustifyContent="Center" HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand">
+            <BindableLayout.ItemTemplate>
+                <DataTemplate x:DataType="model:ItemModel">
+                    <Grid>
+                        <Frame Margin="8" WidthRequest="400" HeightRequest="400">
+                            <VerticalStackLayout>
+                                <Image Source="{Binding ImageName,StringFormat='https://shopworldapi.vamisa.co.za//images/{0}'}" />
+                                <Label  Text="{Binding Description}"/>
+                            </VerticalStackLayout>
+                        </Frame>
+                    </Grid>
+
+                </DataTemplate>
+            </BindableLayout.ItemTemplate>
+        </FlexLayout>
     </VerticalStackLayout>
 </ContentPage>

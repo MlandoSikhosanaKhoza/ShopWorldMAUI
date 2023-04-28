@@ -9,6 +9,7 @@ public partial class ShoppingPage : ContentPage
 	{
 		InitializeComponent();
 		Shell.SetNavBarIsVisible(this, false);
+		Shell.SetTabBarIsVisible(this, true);
 		BindingContext=_viewModel=viewModel;
 	}
     protected override void OnAppearing()
