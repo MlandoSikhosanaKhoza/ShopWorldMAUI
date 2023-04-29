@@ -12,5 +12,6 @@ namespace ShopWorld.MAUI.Services
         string GetToken();
         Task ProcessTokenAsync();
         bool IsValidToken();
+        Task WipePersonalDataAsync();
     }
 }

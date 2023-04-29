@@ -10,5 +10,6 @@ namespace ShopWorld.MAUI.Services
     public interface IUserManagementService
     {
         Task<LoginResult> LoginAsUser(string Mobile);
+        Task Logout();
     }
 }

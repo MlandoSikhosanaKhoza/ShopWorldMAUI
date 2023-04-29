@@ -1,4 +1,6 @@
-﻿using ShopWorld.Shared;
+﻿using ShopWorld.MAUI.Models;
+using ShopWorld.MAUI.Repository;
+using ShopWorld.Shared;
 using System;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
@@ -10,6 +12,14 @@ namespace ShopWorld.MAUI.Services
 {
     public class AuthorizationService:IAuthorizationService
     {
+        /* Initialize: Wipe data for user shopping cart */
+        private IGenericRepository<CartModel> _cartRepository;
+        /* Initialize: Wipe customer data from admin */
+        private IGenericRepository<CustomerModel> _customerRepository;
+        public AuthorizationService(IUnitOfWork unitOfWork) { 
+            _cartRepository = unitOfWork.GetRepository<CartModel>();
+            _customerRepository = unitOfWork.GetRepository<CustomerModel>();
+        }
         private string Token { get; set; }
         public async Task SetLoginToken(string Token)
         {
@@ -25,6 +35,14 @@ namespace ShopWorld.MAUI.Services
         public async Task ProcessTokenAsync()
         {
             Token = await SecureStorage.GetAsync("login_token");
+        }
+
+        public async Task WipePersonalDataAsync()
+        {
+            SecureStorage.RemoveAll();
+            Preferences.Remove("Username");
+            await _cartRepository.DeleteAllAsync();
+            await _customerRepository.DeleteAllAsync();
         }
 
         public bool IsValidToken()

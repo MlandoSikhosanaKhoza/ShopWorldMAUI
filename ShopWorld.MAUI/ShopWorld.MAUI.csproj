@@ -49,6 +49,8 @@
 	</ItemGroup>
 
 	<ItemGroup>
+	  <None Remove="Resources\Fonts\fa-regular-400.ttf" />
+	  <None Remove="Resources\Fonts\fa-regular-900.ttf" />
 	  <None Remove="Resources\Images\shop_world_logo.png" />
 	</ItemGroup>
 
@@ -62,8 +64,8 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <Folder Include="Services\" />
-	  <Folder Include="ViewModels\" />
+	  <Folder Include="Views\Modal\" />
+	  <Folder Include="Views\Templates\" />
 	</ItemGroup>
 
 	<ItemGroup>
@@ -71,7 +73,19 @@
 	</ItemGroup>
 
 	<ItemGroup>
+	  <Compile Update="Views\ShoppingCartPage.xaml.cs">
+	    <DependentUpon>ShoppingCartPage.xaml</DependentUpon>
+	  </Compile>
+	</ItemGroup>
+
+	<ItemGroup>
 	  <MauiXaml Update="Views\LoginPage.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
+	  <MauiXaml Update="Views\ShoppingCartPage.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
+	  <MauiXaml Update="Views\ProfilePage.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
 	  <MauiXaml Update="Views\ShoppingPage.xaml">

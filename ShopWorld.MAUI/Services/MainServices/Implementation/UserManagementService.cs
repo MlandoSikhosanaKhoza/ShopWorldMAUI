@@ -1,4 +1,6 @@
-﻿using ShopWorld.MAUI.Swagger;
+﻿using ShopWorld.MAUI.Repository;
+using ShopWorld.MAUI.Swagger;
+using ShopWorld.MAUI.Views;
 using ShopWorld.Shared;
 using System;
 using System.Collections.Generic;
@@ -11,9 +13,15 @@ namespace ShopWorld.MAUI.Services
     public class UserManagementService:IUserManagementService
     {
         private readonly ShopWorldClient _shopWorldClient;
-        public UserManagementService(ShopWorldClient shopWorldClient)
+        private IAuthorizationService _authorizationService;
+        private INavigationService _navigationService;
+        public UserManagementService(ShopWorldClient shopWorldClient,
+            IAuthorizationService authorizationService,
+            INavigationService navigationService)
         {
             _shopWorldClient = shopWorldClient;
+            _authorizationService = authorizationService;
+            _navigationService = navigationService;
         }
 
         public async Task<LoginResult> LoginAsUser(string Mobile)
@@ -28,6 +36,12 @@ namespace ShopWorld.MAUI.Services
                 login.IsAuthorized = false;
             }
             return login;
+        }
+
+        public async Task Logout()
+        {
+            await _authorizationService.WipePersonalDataAsync();
+            await _navigationService.NavigateToAsync($"//{nameof(StartUpPage)}");
         }
     }
 }

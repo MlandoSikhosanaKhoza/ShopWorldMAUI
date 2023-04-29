@@ -11,18 +11,21 @@
             Text="Shopping"
             VerticalOptions="Center" FontSize="Large"
             HorizontalOptions="Center" Margin="24" />
+        <Label Text="{Binding NumOfWantedItems,StringFormat='Im Interested in {0} item/s'}" VerticalOptions="Center" FontSize="Small"
+            HorizontalOptions="Center"/>
+        <Button Text="Go To Shopping Cart" Command="{Binding CompleteOrderCommand}" HorizontalOptions="Center"/>
         <FlexLayout BindableLayout.ItemsSource="{Binding Items}" JustifyContent="Center" HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand">
             <BindableLayout.ItemTemplate>
                 <DataTemplate x:DataType="model:ItemModel">
-                    <Grid>
+                    
                         <Frame Margin="8" WidthRequest="400" HeightRequest="400">
-                            <VerticalStackLayout>
-                                <Image Source="{Binding ImageName,StringFormat='https://shopworldapi.vamisa.co.za//images/{0}'}" />
-                                <Label  Text="{Binding Description}"/>
-                            </VerticalStackLayout>
+                            <Grid RowDefinitions="Auto,Auto,*,Auto">
+                                <Image Grid.Row="0" Source="{Binding ImageName,StringFormat='https://shopworldapi.vamisa.co.za//images/{0}'}" />
+                                <Label Grid.Row="1" Text="{Binding Description}" FontSize="Medium"/>
+                                <Label Grid.Row="2" Text="{Binding Price,StringFormat='R {0:N}'}"/>
+                            <Button Text="Buy" Grid.Row="3" Command="{Binding Source={RelativeSource AncestorType={x:Type viewModels:ShoppingViewModel}},Path=PurchaseItemCommand}" CommandParameter="{Binding .}"/>
+                        </Grid>
                         </Frame>
-                    </Grid>
-
                 </DataTemplate>
             </BindableLayout.ItemTemplate>
         </FlexLayout>
