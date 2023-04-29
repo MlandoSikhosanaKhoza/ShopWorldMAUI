@@ -63,6 +63,23 @@ namespace ShopWorld.MAUI.Services
             return false;
         }
 
+        public async Task<bool> ReSynchronizeItemsAsync()
+        {
+            bool deletedAllItems=await _itemRepository.DeleteAllAsync();
+            if (deletedAllItems)
+            {
+                await DownloadItemsAsync();
+                return true;
+            }
+            return false;
+        }
+
+        public async Task<bool> DownloadImageBase64Async(string ImageName)
+        {
+            //Your api call for the base 64 image is added
+            return false;
+        }
+
         public async Task<List<ItemModel>> GetAllItemsAsync()
         {
             return await _itemRepository.GetAsync();
