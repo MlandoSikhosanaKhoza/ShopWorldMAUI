@@ -14,32 +14,36 @@
             Text="Receipt"
             VerticalOptions="Center" 
             HorizontalOptions="Center" FontSize="Large" />
+        <Label 
+            Text="{Binding OrderModel.OrderReference}"
+            VerticalOptions="Center" 
+            HorizontalOptions="Center" FontSize="Medium" />
         <Grid ColumnDefinitions="*,*,*,*,*,*" HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand" RowDefinitions="Auto,Auto,Auto">
             <CollectionView Grid.Column="{OnIdiom Desktop=1,Tablet=1,Phone=0}" Grid.ColumnSpan="{OnIdiom Desktop=4,Tablet=4,Phone=6}" ItemsSource="{Binding OrderItems}">
                 <CollectionView.ItemTemplate>
                     <DataTemplate x:DataType="models:OrderItemModel">
                         <VerticalStackLayout>
-                            <Frame >
+                            <Frame Margin="4">
                                 <Grid ColumnDefinitions="*,*,*,*" RowDefinitions="Auto,Auto">
                                     <Label Margin="4" Grid.Row="0" Grid.Column="0" Text="Description" FontSize="Micro"/>
                                     <Label Margin="4" Grid.Row="1" Grid.Column="0" Text="{Binding Description}"/>
-                                    <Label Margin="4" Grid.Row="0" Grid.Column="1" Text="Unit Price" FontSize="Micro"/>
-                                    <Label Margin="4" Grid.Row="1" Grid.Column="1" Text="{Binding UnitPrice,StringFormat='R {0:N}'}"/>
+                                    <Label Margin="4" Grid.Row="0" Grid.Column="1" Text="Item Price" FontSize="Micro"/>
+                                    <Label Margin="4" Grid.Row="1" Grid.Column="1" Text="{Binding Price,StringFormat='R {0:N}'}"/>
                                     <Label Margin="4" Grid.Row="0" Grid.Column="2" Text="Quantity" FontSize="Micro"/>
                                     <Label Margin="4" Grid.Row="1" Grid.Column="2" Text="{Binding Quantity}"/>
-                                    <Label Margin="4" Grid.Row="0" Grid.Column="3" Text="Price" FontSize="Micro"/>
-                                    <Label Margin="4" Grid.Row="1" Grid.Column="3" Text="{Binding Price,StringFormat='R {0:N}'}"/>
+                                    <Label Margin="4" Grid.Row="0" Grid.Column="3" Text="Row Price" FontSize="Micro"/>
+                                    <Label Margin="4" Grid.Row="1" Grid.Column="3" Text="{Binding UnitPrice,StringFormat='R {0:N}'}"/>
                                 </Grid>
                             </Frame>
                         </VerticalStackLayout>
                     </DataTemplate>
                 </CollectionView.ItemTemplate>
             </CollectionView>
-            <Label Grid.Row="1" Grid.Column="{OnIdiom Desktop=1,Tablet=1,Phone=0}" 
-                    Grid.ColumnSpan="{OnIdiom Desktop=4,Tablet=4,Phone=6}" 
+            <Label Grid.Row="1" Margin="4" Grid.Column="{OnIdiom Desktop=1,Tablet=1,Phone=0}" 
+                    Grid.ColumnSpan="{OnIdiom Desktop=4,Tablet=4,Phone=6}" FontSize="Medium"
                     Text="{Binding OrderModel.Subtotal,StringFormat='Sub Total: R {0:N}'}"/>
-            <Label Grid.Row="2" Grid.Column="{OnIdiom Desktop=1,Tablet=1,Phone=0}" 
-                    Grid.ColumnSpan="{OnIdiom Desktop=4,Tablet=4,Phone=6}" 
+            <Label Grid.Row="2" Margin="4" Grid.Column="{OnIdiom Desktop=1,Tablet=1,Phone=0}" 
+                    Grid.ColumnSpan="{OnIdiom Desktop=4,Tablet=4,Phone=6}" FontSize="Medium"
                     Text="{Binding OrderModel.GrandTotal,StringFormat='Grand Total: R {0:N}'}"/>
         </Grid>
     </VerticalStackLayout>
