@@ -14,6 +14,6 @@
 
         </Image>
         <Entry Placeholder="Enter your number" Text="{Binding MobileNumber}" Margin="4" WidthRequest="{OnIdiom Desktop=300,Tablet=200,Phone=120,Default=250}"/>
-        <Button Text="Login" Margin="4" Command="{Binding LoginCommand}"  WidthRequest="{OnIdiom Desktop=300,Tablet=200,Phone=120,Default=250}"></Button>
+        <Button Text="Login" IsEnabled="{Binding IsNotBusy}" Margin="4" Command="{Binding LoginCommand}"  WidthRequest="{OnIdiom Desktop=300,Tablet=200,Phone=120,Default=250}"></Button>
     </StackLayout>
 </ContentPage>

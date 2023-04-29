@@ -17,13 +17,20 @@ namespace ShopWorld.MAUI.Swagger
         private string _baseUrl = "";
         private System.Net.Http.HttpClient _httpClient;
         private System.Lazy<Newtonsoft.Json.JsonSerializerSettings> _settings;
-
+        private IHttpClientService _httpClientService;
         public ShopWorldClient(IHttpClientService httpClientService)
         {
-            _httpClient = httpClientService.GetShopWorldClient();
-            BaseUrl = _httpClient.BaseAddress.AbsoluteUri;
+            _httpClientService=httpClientService;
+            AuthorizeClient();
 
             _settings = new System.Lazy<Newtonsoft.Json.JsonSerializerSettings>(CreateSerializerSettings);
+        }
+
+        public bool AuthorizeClient()
+        {
+            _httpClient = _httpClientService.GetShopWorldClient();
+            BaseUrl = _httpClient.BaseAddress.AbsoluteUri;
+            return true;
         }
 
         public HttpClient GetHttpClient()

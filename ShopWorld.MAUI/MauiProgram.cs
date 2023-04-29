@@ -32,6 +32,8 @@ public static class MauiProgram
         builder.Services.AddSingleton<IUserManagementService, UserManagementService>();
         builder.Services.AddSingleton<IItemService, ItemService>();
         builder.Services.AddSingleton<ICartService, CartService>();
+        builder.Services.AddSingleton<IOrderService, OrderService>();
+        builder.Services.AddSingleton<IOrderItemService, OrderItemService>();
         builder.Services.AddSingleton<ISettingsService, SettingsService>();
 
         builder.Services.AddSingleton<IUnitOfWork, UnitOfWork>();
@@ -46,6 +48,8 @@ public static class MauiProgram
         builder.Services.AddSingleton<ShoppingPage>();
         builder.Services.AddTransient<ShoppingCartPage>();
         builder.Services.AddSingleton<ProfilePage>();
+        builder.Services.AddSingleton<ReceiptPage>();
+        builder.Services.AddSingleton<ReceiptDetailPage>();
         #endregion Views
 
         #region ViewModels
@@ -56,10 +60,12 @@ public static class MauiProgram
         /* Shopping Cart is dependant on the ShoppingViewModel its based on the items purchased inside the ShoppingViewModel */
         builder.Services.AddTransient<ShoppingCartViewModel>();
         builder.Services.AddSingleton<ProfileViewModel>();
+        builder.Services.AddSingleton<ReceiptViewModel>();
+        builder.Services.AddTransient<ReceiptDetailViewModel>();
         #endregion ViewModels
 
         #region Clients
-        builder.Services.AddTransient<ShopWorldClient>();
+        builder.Services.AddSingleton<ShopWorldClient>();
         #endregion Clients
 
 #if DEBUG

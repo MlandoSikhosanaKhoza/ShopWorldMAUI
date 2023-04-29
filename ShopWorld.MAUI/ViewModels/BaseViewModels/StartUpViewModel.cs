@@ -21,11 +21,13 @@ namespace ShopWorld.MAUI.ViewModels
         private IAuthorizationService _authorizationService;
         private INavigationService _navigationService;
         private IItemService _itemService;
+        private IOrderItemService _orderItemService;
         public StartUpViewModel(IAuthorizationService authorizationService,
-            INavigationService navigationService,IItemService itemService) { 
+            INavigationService navigationService,IItemService itemService,IOrderItemService orderItemService) { 
             _authorizationService = authorizationService;
             _navigationService = navigationService;
             _itemService = itemService;
+            _orderItemService = orderItemService;
         }
 
         [RelayCommand]

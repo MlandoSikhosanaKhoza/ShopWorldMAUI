@@ -10,6 +10,8 @@ public partial class AppShell : Shell
 		InitializeComponent();
 		Routing.RegisterRoute(nameof(ShoppingPage),typeof(ShoppingPage));
 		Routing.RegisterRoute(nameof(ShoppingCartPage),typeof(ShoppingCartPage));
+		Routing.RegisterRoute(nameof(ReceiptPage),typeof(ReceiptPage));
+		Routing.RegisterRoute(nameof(ReceiptDetailPage),typeof(ReceiptDetailPage));
 	}
 
     protected override void OnAppearing()

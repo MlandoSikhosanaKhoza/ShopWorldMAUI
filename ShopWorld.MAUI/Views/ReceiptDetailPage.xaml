@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:viewModels="clr-namespace:ShopWorld.MAUI.ViewModels"
+             xmlns:models="clr-namespace:ShopWorld.MAUI.Models"
+             x:DataType="viewModels:ReceiptDetailViewModel"
+             x:Class="ShopWorld.MAUI.Views.ReceiptDetailPage"
+             Title="Receipt">
+    <Shell.BackButtonBehavior>
+        <BackButtonBehavior Command="{Binding GoBackCommand}"/>
+    </Shell.BackButtonBehavior>
+    <VerticalStackLayout>
+        <Label 
+            Text="Receipt"
+            VerticalOptions="Center" 
+            HorizontalOptions="Center" FontSize="Large" />
+        <Grid ColumnDefinitions="*,*,*,*,*,*" HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand" RowDefinitions="Auto,Auto,Auto">
+            <CollectionView Grid.Column="{OnIdiom Desktop=1,Tablet=1,Phone=0}" Grid.ColumnSpan="{OnIdiom Desktop=4,Tablet=4,Phone=6}" ItemsSource="{Binding OrderItems}">
+                <CollectionView.ItemTemplate>
+                    <DataTemplate x:DataType="models:OrderItemModel">
+                        <VerticalStackLayout>
+                            <Frame >
+                                <Grid ColumnDefinitions="*,*,*,*" RowDefinitions="Auto,Auto">
+                                    <Label Margin="4" Grid.Row="0" Grid.Column="0" Text="Description" FontSize="Micro"/>
+                                    <Label Margin="4" Grid.Row="1" Grid.Column="0" Text="{Binding Description}"/>
+                                    <Label Margin="4" Grid.Row="0" Grid.Column="1" Text="Unit Price" FontSize="Micro"/>
+                                    <Label Margin="4" Grid.Row="1" Grid.Column="1" Text="{Binding UnitPrice,StringFormat='R {0:N}'}"/>
+                                    <Label Margin="4" Grid.Row="0" Grid.Column="2" Text="Quantity" FontSize="Micro"/>
+                                    <Label Margin="4" Grid.Row="1" Grid.Column="2" Text="{Binding Quantity}"/>
+                                    <Label Margin="4" Grid.Row="0" Grid.Column="3" Text="Price" FontSize="Micro"/>
+                                    <Label Margin="4" Grid.Row="1" Grid.Column="3" Text="{Binding Price,StringFormat='R {0:N}'}"/>
+                                </Grid>
+                            </Frame>
+                        </VerticalStackLayout>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+            <Label Grid.Row="1" Grid.Column="{OnIdiom Desktop=1,Tablet=1,Phone=0}" 
+                    Grid.ColumnSpan="{OnIdiom Desktop=4,Tablet=4,Phone=6}" 
+                    Text="{Binding OrderModel.Subtotal,StringFormat='Sub Total: R {0:N}'}"/>
+            <Label Grid.Row="2" Grid.Column="{OnIdiom Desktop=1,Tablet=1,Phone=0}" 
+                    Grid.ColumnSpan="{OnIdiom Desktop=4,Tablet=4,Phone=6}" 
+                    Text="{Binding OrderModel.GrandTotal,StringFormat='Grand Total: R {0:N}'}"/>
+        </Grid>
+    </VerticalStackLayout>
+</ContentPage>

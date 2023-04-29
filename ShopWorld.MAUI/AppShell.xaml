@@ -32,6 +32,15 @@
             ContentTemplate="{DataTemplate views:ShoppingPage}"
             Route="ShoppingPage" />
         </Tab>
+        <Tab Title="Receipt">
+            <Tab.Icon>
+                <FontImageSource FontFamily="FontAwesome" Glyph="{x:Static models:IconFont.Receipt}" />
+            </Tab.Icon>
+            <ShellContent
+            Title="Receipt"
+            ContentTemplate="{DataTemplate views:ReceiptPage}"
+            Route="ReceiptPage" />
+        </Tab>
         <Tab Title="Profile">
             <Tab.Icon>
                 <FontImageSource FontFamily="FontAwesome" Glyph="{x:Static models:IconFont.IdCard}" />

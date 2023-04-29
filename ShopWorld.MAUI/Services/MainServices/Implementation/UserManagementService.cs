@@ -30,6 +30,13 @@ namespace ShopWorld.MAUI.Services
             try
             {
                 login = await _shopWorldClient.Authorization_LoginAsync(new MobileLoginInputModel { MobileNumber = Mobile });
+                if (login.IsAuthorized)
+                {
+                    /* Store the JWT Token */
+                    await _authorizationService.SetLoginToken(login.JwtToken);
+
+                    _shopWorldClient.AuthorizeClient();
+                }
             }
             catch (ApiException ex)
             {

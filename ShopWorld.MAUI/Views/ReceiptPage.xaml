@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:viewModels="clr-namespace:ShopWorld.MAUI.ViewModels"
+             xmlns:models="clr-namespace:ShopWorld.MAUI.Models"
+             x:DataType="viewModels:ReceiptViewModel"
+             x:Class="ShopWorld.MAUI.Views.ReceiptPage"
+             Title="ReceiptPage">
+    <VerticalStackLayout>
+        <Label 
+            Text="List of Receipts"
+            VerticalOptions="Center" 
+            HorizontalOptions="Center" FontSize="Large" />
+        <Grid ColumnDefinitions="*,*,*,*,*,*">
+            <CollectionView Grid.Column="{OnIdiom Desktop=1,Tablet=1,Phone=0}" Grid.ColumnSpan="{OnIdiom Desktop=4,Tablet=4,Phone=6}" ItemsSource="{Binding Orders}">
+                <CollectionView.ItemTemplate>
+                    <DataTemplate x:DataType="models:OrderModel">
+                        <VerticalStackLayout>
+                            <Frame Margin="8">
+                                <Grid ColumnDefinitions="Auto,Auto,Auto,Auto,*" RowDefinitions="Auto,Auto">
+                                    <Label Margin="8" Grid.Row="0" Grid.Column="0" Text="Date Created" FontSize="Small"/>
+                                    <Label Margin="8" Grid.Row="1" Grid.Column="0" Text="{Binding DateCreated,StringFormat='{yyyy/MM/dd}'}"/>
+                                    <Label Margin="8" Grid.Row="0" Grid.Column="1" Text="Reference" FontSize="Small"/>
+                                    <Label Margin="8" Grid.Row="1" Grid.Column="1" Text="{Binding OrderReference}"/>
+                                    <Label Margin="8" Grid.Row="0" Grid.Column="2" Text="Sub Total" FontSize="Small"/>
+                                    <Label Margin="8" Grid.Row="1" Grid.Column="2" Text="{Binding Subtotal,StringFormat='R {0:N}'}"/>
+                                    <Label Margin="8" Grid.Row="0" Grid.Column="3" Text="Grand Total" FontSize="Small"/>
+                                    <Label Margin="8" Grid.Row="1" Grid.Column="3" Text="{Binding GrandTotal,StringFormat='R {0:N}'}"/>
+                                    <ImageButton Margin="8" Grid.RowSpan="2" Grid.Column="4" HorizontalOptions="Center"
+                                                 Command="{Binding Source={RelativeSource AncestorType={x:Type viewModels:ReceiptViewModel}},Path=GoToReceiptCommand}" CommandParameter="{Binding .}">
+                                        <ImageButton.Source>
+                                            <FontImageSource FontFamily="FontAwesome" Color="Black" Glyph="{x:Static models:IconFont.Receipt}"/>
+                                        </ImageButton.Source>
+                                    </ImageButton>
+                                </Grid>
+                            </Frame>
+                        </VerticalStackLayout>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+        </Grid>
+        
+    </VerticalStackLayout>
+</ContentPage>

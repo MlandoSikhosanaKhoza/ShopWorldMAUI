@@ -18,16 +18,21 @@ namespace ShopWorld.MAUI.ViewModels
         private IUserManagementService _userManagementService;
         private INavigationService _navigationService;
         private IAuthorizationService _authorizationService;
+        private IOrderService _orderService;
+        private IOrderItemService _orderItemService;
         private ISettingsService _settingsService;
         public LoginViewModel(
             INavigationService navigationService, 
             IAuthorizationService authorizationService,
             IUserManagementService userManagementService,
+            IOrderService orderService,IOrderItemService orderItemService,
             ISettingsService settingsService) { 
             _userManagementService= userManagementService;
             _navigationService= navigationService;
             _authorizationService= authorizationService;
             _settingsService= settingsService;
+            _orderService= orderService;
+            _orderItemService= orderItemService;
         }
         [ObservableProperty]
         private string mobileNumber;
@@ -35,19 +40,30 @@ namespace ShopWorld.MAUI.ViewModels
         [RelayCommand]
         private async void Login()
         {
+            if(IsBusy)
+                return;
+
+            IsBusy = true;
             LoginResult loginResult=await _userManagementService.LoginAsUser(MobileNumber);
             if (loginResult.IsAuthorized)
             {
-                await _authorizationService.SetLoginToken(loginResult.JwtToken);
-                JwtSecurityToken securityToken=JwtTokenReader.GetJwtToken(loginResult.JwtToken);
-                Claim fullNameClaim=securityToken.Claims.Where(c => c.Type == ClaimTypes.Name).FirstOrDefault();
-                _settingsService.SetFullName(fullNameClaim.Value);
+
+                /* Download all the customer Receipts */
+                await _orderService.CheckAndDownload();
+                await _orderItemService.CheckAndDownload();
+                
+                /* Read JWT Token for Full name*/
+                _settingsService.SetFullName(JwtTokenReader.GetTokenValue(loginResult.JwtToken,ClaimTypes.Name));
+                
+                /* Go to the Shopping Page*/
                 await _navigationService.NavigateToAsync($"//{nameof(ShoppingPage)}");
             }
             else
             {
                 await Shell.Current.DisplayAlert("Invalid Login", "Incorrect Username/Password", "OK");
             }
+
+            IsBusy = false;
         }
     }
 }
