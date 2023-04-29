@@ -10,7 +10,7 @@
         <BackButtonBehavior Command="{Binding GoBackCommand}"/>
     </Shell.BackButtonBehavior>
     <Grid ColumnDefinitions="*,*,*,*,*,*">
-        <VerticalStackLayout Grid.Column="{OnIdiom Phone=0,Tablet=1,Desktop=2}" Grid.ColumnSpan="{OnIdiom Phone=6,Tablet=4,Desktop=2}">
+        <VerticalStackLayout Grid.Column="{OnIdiom Phone=0,Tablet=1,Desktop=1}" Grid.ColumnSpan="{OnIdiom Phone=6,Tablet=4,Desktop=4}">
             <Label Text="{Binding TotalBeforeTax,StringFormat='Total excl VAT R {0:N}'}"></Label>
             <Label Text="{Binding TotalAfterTax,StringFormat='Total incl VAT R {0:N}'}"></Label>
             <CollectionView ItemsSource="{Binding MyOrderItems}">
@@ -41,6 +41,7 @@
                     </DataTemplate>
                 </CollectionView.ItemTemplate>
             </CollectionView>
+            <Button IsVisible="{Binding IsDisplayingCheckoutButton}" IsEnabled="{Binding IsNotBusy}" Text="Checkout" Command="{Binding CheckoutCommand}" Margin="4" />
         </VerticalStackLayout>
     </Grid>
 </ContentPage>

@@ -1,5 +1,8 @@
 ﻿using ShopWorld.MAUI.Models;
 using ShopWorld.MAUI.Repository;
+using ShopWorld.MAUI.Swagger;
+using ShopWorld.Shared;
+using ShopWorld.Shared.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,8 +17,12 @@ namespace ShopWorld.MAUI.Services
     public class CartService:ICartService
     {
         private readonly IGenericRepository<CartModel> _cartRepository;
-        public CartService(IUnitOfWork unitOfWork) {
+        private readonly IAuthorizationService _authorizationService;
+        private readonly ShopWorldClient _shopWorldClient;
+        public CartService(IUnitOfWork unitOfWork,ShopWorldClient shopWorldClient,IAuthorizationService authorizationService) {
             _cartRepository = unitOfWork.GetRepository<CartModel>();
+            _authorizationService = authorizationService;
+            _shopWorldClient = shopWorldClient;
         }
 
         public async Task<CartModel> GetCartModelByItemId(int ItemId)
@@ -27,6 +34,39 @@ namespace ShopWorld.MAUI.Services
         public async Task<List<CartModel>> GetCartItemsAsync()
         {
             return await _cartRepository.GetAsync();
+        }
+
+        public async Task<bool> SyncPurchases(List<CartModel> Carts)
+        {
+            string customerId = JwtTokenReader.GetTokenValue(_authorizationService.GetToken(), "CustomerId");
+            int[] itemId=Carts.Select(c=>c.ItemId).ToArray();
+            int[] quantityList=Carts.Select(c=>c.Quantity).ToArray();
+            decimal total = Carts.Sum(c => c.Quantity * c.Price);
+            try
+            {
+                Order order = await _shopWorldClient.Order_AddOrderAsync(
+                new Order
+                {
+                    CustomerId = int.Parse(customerId),
+                    DateCreated = DateTime.Now,
+                    OrderReference = Guid.NewGuid(),
+                    Subtotal = total,
+                    GrandTotal = (total * Convert.ToDecimal(1.15)),
+                });
+                await _shopWorldClient.OrderItem_AddOrderItemsAsync(
+                    new Shared.OrderItemInputModel
+                    {
+                        OrderId = order.OrderId,
+                        ItemId = itemId,
+                        Quantity = quantityList
+                    });
+                await _cartRepository.DeleteAllAsync();
+                return true;
+            }
+            catch (ApiException)
+            {
+                return false;
+            }
         }
 
         public async Task<CartModel> AddItemToCartAsync(ItemModel ItemObject)

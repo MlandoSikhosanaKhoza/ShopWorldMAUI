@@ -28,12 +28,31 @@ namespace ShopWorld.MAUI.ViewModels
         [ObservableProperty]
         private ObservableCollection<CartModel> myOrderItems=new ObservableCollection<CartModel>();
         [ObservableProperty]
+        [NotifyPropertyChangedFor(nameof(IsDisplayingCheckoutButton))]
         private decimal totalBeforeTax;
+        [ObservableProperty]
+        private decimal totalAfterTax;
 
+        public bool IsDisplayingCheckoutButton => TotalBeforeTax > 0;
         [RelayCommand]
         private async void GoBack()
         {
             await _navigationService.NavigateToAsync($"//{nameof(ShoppingPage)}");
+        }
+
+        [RelayCommand]
+        private async void Checkout()
+        {
+            if (IsBusy)
+            {
+                return;
+            }
+            IsBusy = true;
+            await _cartService.SyncPurchases(MyOrderItems.ToList());
+            MyOrderItems = new ObservableCollection<CartModel>(await _cartService.GetCartItemsAsync());
+            TotalBeforeTax = MyOrderItems.Sum(oi => oi.Price * oi.Quantity);
+            TotalAfterTax = TotalBeforeTax * (Tax.VAT + 1);
+            IsBusy = false;
         }
 
         [RelayCommand]
@@ -81,8 +100,7 @@ namespace ShopWorld.MAUI.ViewModels
             IsBusy = false;
         }
 
-        [ObservableProperty]
-        private decimal totalAfterTax;
+        
         public async void OnAppearingAsync() { 
             MyOrderItems = new ObservableCollection<CartModel>(await _cartService.GetCartItemsAsync());
             TotalBeforeTax = MyOrderItems.Sum(oi => oi.Price * oi.Quantity);
