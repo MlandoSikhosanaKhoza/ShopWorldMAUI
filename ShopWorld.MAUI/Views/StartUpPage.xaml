@@ -11,6 +11,7 @@
             
         </Image>
         <Button Text="Login as User" Command="{Binding LoginAsUserCommand}" Margin="4"/>
-        <Button Text="Login as Admin" Command="{Binding LoginAsAdminCommand}" Margin="4"/>
+        <!--This will be implemented at a later stage-->
+        <Button Text="Login as Admin" Command="{Binding LoginAsAdminCommand}" IsVisible="false" Margin="4"/>
     </VerticalStackLayout>
 </ContentPage>

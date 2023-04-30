@@ -48,7 +48,8 @@ namespace ShopWorld.MAUI.ViewModels
                 return;
             }
             IsBusy = true;
-            await _cartService.SyncPurchases(MyOrderItems.ToList());
+            /* I might actually tell the user that the purchase was made successfully */
+            bool isSyncedPurchases=await _cartService.SyncPurchases(MyOrderItems.ToList());
             MyOrderItems = new ObservableCollection<CartModel>(await _cartService.GetCartItemsAsync());
             TotalBeforeTax = MyOrderItems.Sum(oi => oi.Price * oi.Quantity);
             TotalAfterTax = TotalBeforeTax * (Tax.VAT + 1);

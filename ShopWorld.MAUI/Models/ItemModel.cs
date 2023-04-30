@@ -12,6 +12,7 @@ namespace ShopWorld.MAUI.Models
     {
         [PrimaryKey]
         public int ItemId { get; set; }
+        /*Image url stored here*/
         [MaxLength(300)]
         public string ImageName { get; set; }
         [MaxLength(40)]

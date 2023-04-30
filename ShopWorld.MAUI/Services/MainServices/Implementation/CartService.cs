@@ -17,10 +17,14 @@ namespace ShopWorld.MAUI.Services
     public class CartService:ICartService
     {
         private readonly IGenericRepository<CartModel> _cartRepository;
+        private readonly IGenericRepository<OrderModel> _orderRepository;
+        private readonly IGenericRepository<OrderItemModel> _orderItemRepository;
         private readonly IAuthorizationService _authorizationService;
         private readonly ShopWorldClient _shopWorldClient;
         public CartService(IUnitOfWork unitOfWork,ShopWorldClient shopWorldClient,IAuthorizationService authorizationService) {
             _cartRepository = unitOfWork.GetRepository<CartModel>();
+            _orderRepository = unitOfWork.GetRepository<OrderModel>();
+            _orderItemRepository = unitOfWork.GetRepository<OrderItemModel>();
             _authorizationService = authorizationService;
             _shopWorldClient = shopWorldClient;
         }
@@ -36,14 +40,15 @@ namespace ShopWorld.MAUI.Services
             return await _cartRepository.GetAsync();
         }
 
-        public async Task<bool> SyncPurchases(List<CartModel> Carts)
+        public async Task<bool> SyncPurchases(List<CartModel> CartItems)
         {
             string customerId = JwtTokenReader.GetTokenValue(_authorizationService.GetToken(), "CustomerId");
-            int[] itemId=Carts.Select(c=>c.ItemId).ToArray();
-            int[] quantityList=Carts.Select(c=>c.Quantity).ToArray();
-            decimal total = Carts.Sum(c => c.Quantity * c.Price);
+            int[] itemId=CartItems.Select(c=>c.ItemId).ToArray();
+            int[] quantityList=CartItems.Select(c=>c.Quantity).ToArray();
+            decimal total = CartItems.Sum(c => c.Quantity * c.Price);
             try
             {
+                #region Order Client
                 Order order = await _shopWorldClient.Order_AddOrderAsync(
                 new Order
                 {
@@ -53,13 +58,38 @@ namespace ShopWorld.MAUI.Services
                     Subtotal = total,
                     GrandTotal = (total * Convert.ToDecimal(1.15)),
                 });
-                await _shopWorldClient.OrderItem_AddOrderItemsAsync(
+                List<OrderItem> orderItems=(List<OrderItem>)await _shopWorldClient.OrderItem_AddOrderItemsAsync(
                     new Shared.OrderItemInputModel
                     {
                         OrderId = order.OrderId,
                         ItemId = itemId,
                         Quantity = quantityList
                     });
+                #endregion Order Client
+                #region Order Persistence
+                await _orderRepository.InsertAsync(new OrderModel
+                {
+                    OrderId= order.OrderId,
+                    CustomerId= int.Parse(customerId),
+                    DateCreated=DateTime.Now,
+                    OrderReference= order.OrderReference,
+                    VAT=order.VAT,
+                    Subtotal= total,
+                    GrandTotal= (total * Convert.ToDecimal(1.15))
+                });
+                for (int i = 0; i < orderItems.Count; i++)
+                {
+                    await _orderItemRepository.InsertAsync(new OrderItemModel
+                    {
+                        OrderItemId = orderItems[i].OrderItemId,
+                        OrderId= order.OrderId,
+                        ItemId = CartItems[i].ItemId,
+                        Description = CartItems[i].ItemName,
+                        Quantity = CartItems[i].Quantity,
+                        Price = CartItems[i].Price
+                    });
+                }
+                #endregion Order Persistence
                 await _cartRepository.DeleteAllAsync();
                 return true;
             }

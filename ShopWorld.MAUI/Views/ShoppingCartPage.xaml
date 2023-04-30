@@ -5,7 +5,7 @@
              xmlns:model="clr-namespace:ShopWorld.MAUI.Models"
              x:DataType="viewModels:ShoppingCartViewModel"
              x:Class="ShopWorld.MAUI.Views.ShoppingCartPage"
-             Title="ShoppingCartModal">
+             Title="Shopping Cart">
     <Shell.BackButtonBehavior>
         <BackButtonBehavior Command="{Binding GoBackCommand}"/>
     </Shell.BackButtonBehavior>

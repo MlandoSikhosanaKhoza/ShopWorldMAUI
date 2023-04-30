@@ -12,6 +12,7 @@ namespace ShopWorld.MAUI.Services
         Task<bool> HasItems();
         Task<bool> CheckAndDownload();
         Task<bool> DownloadItemsAsync();
+        Task<bool> DeleteAllItemImages();
         Task<bool> ReSynchronizeItemsAsync();
         Task<List<ItemModel>> GetAllItemsAsync();
     }

@@ -1,6 +1,7 @@
 ﻿using CommunityToolkit.Maui.Views;
 using CommunityToolkit.Mvvm.Input;
 using ShopWorld.MAUI.Services;
+using ShopWorld.MAUI.Swagger;
 using ShopWorld.MAUI.Views;
 using ShopWorld.Shared;
 using System;
@@ -22,12 +23,15 @@ namespace ShopWorld.MAUI.ViewModels
         private INavigationService _navigationService;
         private IItemService _itemService;
         private IOrderItemService _orderItemService;
+        private ShopWorldClient _shopWorldClient;
         public StartUpViewModel(IAuthorizationService authorizationService,
-            INavigationService navigationService,IItemService itemService,IOrderItemService orderItemService) { 
+            INavigationService navigationService,IItemService itemService,
+            IOrderItemService orderItemService,ShopWorldClient shopWorldClient) { 
             _authorizationService = authorizationService;
             _navigationService = navigationService;
             _itemService = itemService;
             _orderItemService = orderItemService;
+            _shopWorldClient = shopWorldClient;
         }
 
         [RelayCommand]
@@ -56,6 +60,7 @@ namespace ShopWorld.MAUI.ViewModels
             await _authorizationService.ProcessTokenAsync();
             if (_authorizationService.IsValidToken())
             {
+                _shopWorldClient.AuthorizeClient();
                 /*Check if the user is admin or customer */
                 string role = JwtTokenReader.GetTokenValue(_authorizationService.GetToken(),ClaimTypes.Role);
                 switch (role)
@@ -64,7 +69,7 @@ namespace ShopWorld.MAUI.ViewModels
                         await _navigationService.NavigateToAsync($"//{nameof(ShoppingPage)}");
                         break;
                     case "Admin":
-                        
+                        /* Implementation will take place at a later stage */
                         break;
                 }
             }

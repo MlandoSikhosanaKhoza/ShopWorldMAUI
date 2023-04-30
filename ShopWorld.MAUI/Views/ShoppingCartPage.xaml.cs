@@ -9,7 +9,6 @@ public partial class ShoppingCartPage : ContentPage
     public ShoppingCartPage(ShoppingCartViewModel viewModel)
     {
         InitializeComponent();
-        Shell.SetNavBarIsVisible(this, false);
         BindingContext = _viewModel = viewModel;
     }
 

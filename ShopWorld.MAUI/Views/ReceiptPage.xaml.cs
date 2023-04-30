@@ -8,7 +8,6 @@ public partial class ReceiptPage : ContentPage
 	public ReceiptPage(ReceiptViewModel viewModel)
 	{
 		InitializeComponent();
-		Shell.SetNavBarIsVisible(this, false);
 		BindingContext=_viewModel = viewModel;
 	}
 

@@ -16,6 +16,7 @@ namespace ShopWorld.MAUI.Services
         private IGenericRepository<CartModel> _cartRepository;
         private IGenericRepository<OrderModel> _orderRepository;
         private IGenericRepository<OrderItemModel> _orderItemRepository;
+        private IGenericRepository<ItemModel> _itemRepository;
         /* Initialize: Wipe customer data from admin */
         private IGenericRepository<CustomerModel> _customerRepository;
         public AuthorizationService(IUnitOfWork unitOfWork) { 
@@ -23,6 +24,7 @@ namespace ShopWorld.MAUI.Services
             _customerRepository = unitOfWork.GetRepository<CustomerModel>();
             _orderRepository = unitOfWork.GetRepository<OrderModel>();
             _orderItemRepository = unitOfWork.GetRepository<OrderItemModel>();
+            _itemRepository = unitOfWork.GetRepository<ItemModel>();
         }
         private string Token { get; set; }
         public async Task SetLoginToken(string Token)
@@ -49,6 +51,7 @@ namespace ShopWorld.MAUI.Services
             await _customerRepository.DeleteAllAsync();
             await _orderRepository.DeleteAllAsync();
             await _orderItemRepository.DeleteAllAsync();
+            await _itemRepository.DeleteAllAsync();
         }
 
         public bool IsValidToken()

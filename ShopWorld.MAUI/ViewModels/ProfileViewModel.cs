@@ -15,10 +15,14 @@ namespace ShopWorld.MAUI.ViewModels
         private ISettingsService _settingsService;
         private IAuthorizationService _authorizationService;
         private INavigationService _navigationService;
-        public ProfileViewModel(ISettingsService settingsService,IAuthorizationService authorizationService,INavigationService navigationService) { 
+        private IItemService _itemService;
+        public ProfileViewModel(ISettingsService settingsService,
+            IAuthorizationService authorizationService
+            ,INavigationService navigationService,IItemService itemService) { 
             _settingsService = settingsService;
             _authorizationService = authorizationService;
             _navigationService = navigationService;
+            _itemService = itemService;
         }
         [ObservableProperty]
         private string fullName;
@@ -26,6 +30,7 @@ namespace ShopWorld.MAUI.ViewModels
         [RelayCommand]
         private async void Logout()
         {
+            await _itemService.DeleteAllItemImages();
             await _authorizationService.WipePersonalDataAsync();
             await _navigationService.NavigateToAsync($"//{nameof(StartUpPage)}");
         }

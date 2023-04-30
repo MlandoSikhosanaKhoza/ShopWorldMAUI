@@ -5,7 +5,7 @@
              xmlns:models="clr-namespace:ShopWorld.MAUI.Models"
              x:DataType="viewModels:ReceiptDetailViewModel"
              x:Class="ShopWorld.MAUI.Views.ReceiptDetailPage"
-             Title="Receipt">
+             Title="Receipt Detail">
     <Shell.BackButtonBehavior>
         <BackButtonBehavior Command="{Binding GoBackCommand}"/>
     </Shell.BackButtonBehavior>

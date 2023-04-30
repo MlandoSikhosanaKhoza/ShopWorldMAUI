@@ -4,7 +4,7 @@
              xmlns:viewModels="clr-namespace:ShopWorld.MAUI.ViewModels"
              x:Class="ShopWorld.MAUI.Views.ProfilePage"
              x:DataType="viewModels:ProfileViewModel"
-             Title="ProfilePage">
+             Title="Profile">
     <VerticalStackLayout>
         <Label 
             Text="{Binding FullName}"

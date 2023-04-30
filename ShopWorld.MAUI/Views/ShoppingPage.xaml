@@ -5,34 +5,42 @@
              xmlns:model="clr-namespace:ShopWorld.MAUI.Models"
              x:Class="ShopWorld.MAUI.Views.ShoppingPage"
              x:DataType="viewModels:ShoppingViewModel"
-             Title="ShoppingPage">
-    <VerticalStackLayout>
-        <HorizontalStackLayout HorizontalOptions="Center" VerticalOptions="Center">
-            <Label Text="Shopping" VerticalOptions="Center" FontSize="Large" HorizontalOptions="Center" Margin="24" />
-            <ImageButton>
-                <ImageButton.Source>
-                    <FontImageSource FontFamily="FontAwesome" Glyph="{x:Static model:IconFont.Redo}" Color="Black"/>
-                </ImageButton.Source>
-            </ImageButton>
-        </HorizontalStackLayout>
-
-        <Label Text="{Binding NumOfWantedItems,StringFormat='Im Interested in {0} item/s'}" VerticalOptions="Center" FontSize="Small"
+             Title="Items">
+    <Grid RowDefinitions="Auto,*" HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand">
+        <VerticalStackLayout Grid.Row="0">
+            <HorizontalStackLayout HorizontalOptions="Center" VerticalOptions="Center">
+                <ImageButton Command="{Binding RefreshItemsCommand}">
+                    <ImageButton.Source>
+                        <FontImageSource FontFamily="FontAwesome" Glyph="{x:Static model:IconFont.Redo}" Color="Black"/>
+                    </ImageButton.Source>
+                </ImageButton>
+            </HorizontalStackLayout>
+            <Label Text="{Binding NumOfWantedItems,StringFormat='Im Interested in {0} item/s'}" VerticalOptions="Center" FontSize="Small"
             HorizontalOptions="Center"/>
-        <Button Text="Go To Shopping Cart" Command="{Binding CompleteOrderCommand}" HorizontalOptions="Center"/>
-        <FlexLayout BindableLayout.ItemsSource="{Binding Items}" JustifyContent="Center" HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand">
-            <BindableLayout.ItemTemplate>
-                <DataTemplate x:DataType="model:ItemModel">
+            <Button Text="Go To Shopping Cart" Command="{Binding CompleteOrderCommand}" HorizontalOptions="Center"/>
 
-                    <Frame Margin="8" WidthRequest="400" HeightRequest="400">
-                        <Grid RowDefinitions="Auto,Auto,*,Auto">
-                            <Image Grid.Row="0" Source="{Binding ImageName,StringFormat='https://shopworldapi.vamisa.co.za//images/{0}'}" />
-                            <Label Grid.Row="1" Text="{Binding Description}" FontSize="Medium"/>
-                            <Label Grid.Row="2" Text="{Binding Price,StringFormat='R {0:N}'}"/>
-                            <Button Text="Buy" Grid.Row="3" Command="{Binding Source={RelativeSource AncestorType={x:Type viewModels:ShoppingViewModel}},Path=PurchaseItemCommand}" CommandParameter="{Binding .}"/>
-                        </Grid>
-                    </Frame>
-                </DataTemplate>
-            </BindableLayout.ItemTemplate>
-        </FlexLayout>
-    </VerticalStackLayout>
+        </VerticalStackLayout>
+        
+        <ScrollView Grid.Row="1" IsVisible="{Binding IsNotLoadingItems}" HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand" VerticalScrollBarVisibility="Always">
+            <VerticalStackLayout>
+                <FlexLayout BindableLayout.ItemsSource="{Binding Items}" Wrap="Wrap" JustifyContent="Start" HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand">
+                    <BindableLayout.ItemTemplate>
+                        <DataTemplate x:DataType="model:ItemModel">
+
+                            <Frame Margin="8" WidthRequest="300" HeightRequest="400">
+                                <Grid RowDefinitions="Auto,Auto,*,Auto">
+                                    <Image Grid.Row="0" Source="{Binding ImageName}" />
+                                    <Label Grid.Row="1" Text="{Binding Description}" FontSize="Medium"/>
+                                    <Label Grid.Row="2" Text="{Binding Price,StringFormat='R {0:N}'}"/>
+                                    <Button Text="Buy" Grid.Row="3" Command="{Binding Source={RelativeSource AncestorType={x:Type viewModels:ShoppingViewModel}},Path=PurchaseItemCommand}" CommandParameter="{Binding .}"/>
+                                </Grid>
+                            </Frame>
+                        </DataTemplate>
+                    </BindableLayout.ItemTemplate>
+                </FlexLayout>
+            </VerticalStackLayout>
+        </ScrollView>
+        
+        <ActivityIndicator Grid.RowSpan="2" IsVisible="{Binding IsBusy}" IsRunning="{Binding IsBusy}" VerticalOptions="CenterAndExpand" HorizontalOptions="CenterAndExpand"/>
+    </Grid>
 </ContentPage>

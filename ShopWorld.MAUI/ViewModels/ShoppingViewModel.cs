@@ -30,8 +30,27 @@ namespace ShopWorld.MAUI.ViewModels
         private ObservableCollection<ItemModel> items;
         [ObservableProperty]
         private ObservableCollection<CartModel> myOrderItems = new ObservableCollection<CartModel>();
+        [ObservableProperty]
+        [NotifyPropertyChangedFor(nameof(IsNotLoadingItems))]
+        private bool isLoadingItems = false;
 
+        public bool IsNotLoadingItems => !IsLoadingItems;
         public int NumOfWantedItems => MyOrderItems.Sum(oi => oi.Quantity);
+
+        [RelayCommand]
+        private async void RefreshItems()
+        {
+            if (IsBusy)
+            {
+                return;
+            }
+            IsBusy = true;
+            IsLoadingItems = true;
+            await _itemService.ReSynchronizeItemsAsync();
+            Items=new ObservableCollection<ItemModel>(await _itemService.GetAllItemsAsync());
+            IsLoadingItems=false;
+            IsBusy = false;
+        }
 
         [RelayCommand]
         private async void CompleteOrder()

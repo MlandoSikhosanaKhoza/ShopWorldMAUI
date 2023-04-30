@@ -8,7 +8,6 @@ public partial class ProfilePage : ContentPage
 	public ProfilePage(ProfileViewModel viewModel)
 	{
 		InitializeComponent();
-        Shell.SetNavBarIsVisible(this, false);
         BindingContext = _viewModel = viewModel;
     }
 
