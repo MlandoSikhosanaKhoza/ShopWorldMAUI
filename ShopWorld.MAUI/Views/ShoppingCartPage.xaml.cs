@@ -16,6 +16,6 @@ public partial class ShoppingCartPage : ContentPage
     protected override void OnAppearing()
     {
         base.OnAppearing();
-        _viewModel.OnAppearingAsync();
+        _viewModel.OnAppearing();
     }
 }

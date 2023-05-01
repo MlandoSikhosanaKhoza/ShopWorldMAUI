@@ -55,7 +55,9 @@ namespace ShopWorld.MAUI.ViewModels
         [RelayCommand]
         private async void CompleteOrder()
         {
-            await _navigationService.NavigateToAsync($"{nameof(ShoppingCartPage)}");
+            Dictionary<string,object> data = new Dictionary<string,object>();
+            data.Add("MyOrderItems", MyOrderItems);
+            await _navigationService.NavigateToAsync($"{nameof(ShoppingCartPage)}",data);
         }
 
         [RelayCommand]
@@ -87,10 +89,10 @@ namespace ShopWorld.MAUI.ViewModels
                 return;
             }
             IsBusy = true;
-
-            Items = new ObservableCollection<ItemModel>(await _itemService.GetAllItemsAsync());
-            MyOrderItems = new ObservableCollection<CartModel>(await _cartService.GetCartItemsAsync());
-
+            if(Items==null) {
+                Items = new ObservableCollection<ItemModel>(await _itemService.GetAllItemsAsync());
+                MyOrderItems = new ObservableCollection<CartModel>(await _cartService.GetCartItemsAsync());
+            }
             OnPropertyChanged(nameof(NumOfWantedItems));
             IsBusy = false;
         }
