@@ -20,11 +20,11 @@
                                 <Frame Margin="8">
                                     <Grid ColumnDefinitions="*,*,*,*" HorizontalOptions="FillAndExpand" RowDefinitions="Auto,Auto">
                                         <Label Margin="8" Grid.Row="0" Grid.Column="0" Text="Date Created" FontSize="Micro"/>
-                                        <Label Margin="8" Grid.Row="1" Grid.Column="0" Text="{Binding DateCreated,StringFormat='{yyyy/MM/dd}'}"/>
+                                        <Label Margin="8" Grid.Row="1" Grid.Column="0" Text="{Binding DateCreated,StringFormat='{0:yyyy/MM/dd}'}"/>
                                         <Label Margin="8" Grid.Row="0" Grid.Column="1" Text="Reference" FontSize="Micro"/>
                                         <Label Margin="8" Grid.Row="1" Grid.Column="1" Text="{Binding OrderReference}"/>
                                         <Label Margin="8" Grid.Row="0" Grid.Column="2" Text="Grand Total" FontSize="Micro"/>
-                                        <Label Margin="8" Grid.Row="1" Grid.Column="2" Text="{Binding GrandTotal,StringFormat='R {0:N}'}"/>
+                                        <Label Margin="8" Grid.Row="1" Grid.Column="2" Text="{Binding GrandTotal,StringFormat='R {0:F2}'}"/>
                                         <ImageButton Margin="8" Grid.RowSpan="2" Grid.Column="3" HorizontalOptions="Center"
                                                  Command="{Binding Source={RelativeSource AncestorType={x:Type viewModels:ReceiptViewModel}},Path=GoToReceiptCommand}" CommandParameter="{Binding .}">
                                             <ImageButton.Source>

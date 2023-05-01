@@ -66,6 +66,7 @@ namespace ShopWorld.MAUI.ViewModels
                 switch (role)
                 {
                     case "Customer":
+                        IsBusy = false;
                         await _navigationService.NavigateToAsync($"//{nameof(ShoppingPage)}");
                         break;
                     case "Admin":
