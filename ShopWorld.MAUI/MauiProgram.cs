@@ -58,7 +58,7 @@ public static class MauiProgram
 
         builder.Services.AddSingleton<ShoppingViewModel>();
         /* Shopping Cart is dependant on the ShoppingViewModel its based on the items purchased inside the ShoppingViewModel */
-        builder.Services.AddTransient<ShoppingCartViewModel>();
+        builder.Services.AddSingleton<ShoppingCartViewModel>();
         builder.Services.AddSingleton<ProfileViewModel>();
         builder.Services.AddSingleton<ReceiptViewModel>();
         builder.Services.AddTransient<ReceiptDetailViewModel>();

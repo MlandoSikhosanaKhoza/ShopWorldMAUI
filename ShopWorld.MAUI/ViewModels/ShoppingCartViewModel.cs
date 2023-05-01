@@ -13,6 +13,7 @@ using System.Threading.Tasks;
 
 namespace ShopWorld.MAUI.ViewModels
 {
+    [QueryProperty(nameof(MyOrderItems),nameof(MyOrderItems))]
     public partial class ShoppingCartViewModel:BaseViewModel
     {
         private INavigationService _navigationService;
@@ -57,53 +58,62 @@ namespace ShopWorld.MAUI.ViewModels
         }
 
         [RelayCommand]
-        private async void IncreaseQuantity(CartModel cartModel)
+        private void IncreaseQuantity(CartModel cartModel)
         {
             if(IsBusy) return;
             IsBusy = true;
             cartModel.Quantity++;
-            await _cartService.UpdateCartItem(cartModel);
-            MyOrderItems = new ObservableCollection<CartModel>(await _cartService.GetCartItemsAsync());
+            MainThread.BeginInvokeOnMainThread(async()=>{
+                await _cartService.UpdateCartItem(cartModel);
+            });
+            MyOrderItems = new ObservableCollection<CartModel>(MyOrderItems);
             TotalBeforeTax = MyOrderItems.Sum(oi => oi.Price * oi.Quantity);
             TotalAfterTax = TotalBeforeTax * (Tax.VAT + 1);
             IsBusy = false;
         }
 
         [RelayCommand]
-        private async void DecreaseQuantity(CartModel cartModel)
+        private void DecreaseQuantity(CartModel cartModel)
         {
             if (IsBusy) return;
             IsBusy = true;
             cartModel.Quantity--;
             if (cartModel.Quantity==0)
             {
-                await _cartService.RemoveCartItem(cartModel);
+                MainThread.BeginInvokeOnMainThread(async () => {
+                    await _cartService.RemoveCartItem(cartModel);
+                });
+                
+                MyOrderItems.Remove(cartModel);
             }
             else
             {
-                await _cartService.UpdateCartItem(cartModel);
+                MainThread.BeginInvokeOnMainThread(async () =>{
+                    await _cartService.UpdateCartItem(cartModel);
+                });
             }
-            MyOrderItems = new ObservableCollection<CartModel>(await _cartService.GetCartItemsAsync());
+            MyOrderItems = new ObservableCollection<CartModel>(MyOrderItems);
             TotalBeforeTax = MyOrderItems.Sum(oi => oi.Price * oi.Quantity);
             TotalAfterTax = TotalBeforeTax * (Tax.VAT + 1);
             IsBusy = false;
         }
 
         [RelayCommand]
-        private async void RemoveCartItem(CartModel cartModel)
+        private void RemoveCartItem(CartModel cartModel)
         {
             if (IsBusy) return;
             IsBusy = true;
-            await _cartService.RemoveCartItem(cartModel);
-            MyOrderItems = new ObservableCollection<CartModel>(await _cartService.GetCartItemsAsync());
+            MainThread.BeginInvokeOnMainThread(async () => {
+                await _cartService.RemoveCartItem(cartModel);
+            });
+            MyOrderItems.Remove(cartModel);
             TotalBeforeTax = MyOrderItems.Sum(oi => oi.Price * oi.Quantity);
             TotalAfterTax = TotalBeforeTax * (Tax.VAT + 1);
             IsBusy = false;
         }
 
         
-        public async void OnAppearingAsync() { 
-            MyOrderItems = new ObservableCollection<CartModel>(await _cartService.GetCartItemsAsync());
+        public async void OnAppearing() {
             TotalBeforeTax = MyOrderItems.Sum(oi => oi.Price * oi.Quantity);
             TotalAfterTax = TotalBeforeTax * (Tax.VAT+1);
         }
