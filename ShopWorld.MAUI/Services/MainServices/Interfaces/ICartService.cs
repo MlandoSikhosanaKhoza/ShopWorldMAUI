@@ -15,5 +15,6 @@ namespace ShopWorld.MAUI.Services
         Task<CartModel> UpdateCartItem(CartModel CartObject);
         Task<bool> RemoveCartItem(CartModel CartObject);
         Task<bool> SyncPurchases(List<CartModel> Carts);
+        Task<int> CountAsync();
     }
 }

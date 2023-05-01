@@ -91,7 +91,14 @@ namespace ShopWorld.MAUI.ViewModels
             IsBusy = true;
             if(Items==null) {
                 Items = new ObservableCollection<ItemModel>(await _itemService.GetAllItemsAsync());
+            }
+            if((await _cartService.CountAsync())>0)
+            {
                 MyOrderItems = new ObservableCollection<CartModel>(await _cartService.GetCartItemsAsync());
+            }
+            else
+            {
+                MyOrderItems = new ObservableCollection<CartModel>();
             }
             OnPropertyChanged(nameof(NumOfWantedItems));
             IsBusy = false;

@@ -13,7 +13,6 @@ using System.Threading.Tasks;
 
 namespace ShopWorld.MAUI.ViewModels
 {
-    [QueryProperty(nameof(MyOrderItems),nameof(MyOrderItems))]
     public partial class ShoppingCartViewModel:BaseViewModel
     {
         private INavigationService _navigationService;
@@ -103,7 +102,8 @@ namespace ShopWorld.MAUI.ViewModels
         }
 
         
-        public void OnAppearing() { 
+        public void OnAppearing() {
+            MyOrderItems = _shoppingViewModel.MyOrderItems;
             TotalBeforeTax = MyOrderItems.Sum(oi => oi.Price * oi.Quantity);
             TotalAfterTax = TotalBeforeTax * (Tax.VAT+1);
         }

@@ -46,7 +46,7 @@ namespace ShopWorld.MAUI.Services
         public async Task WipePersonalDataAsync()
         {
             SecureStorage.RemoveAll();
-            Preferences.Remove("Username");
+            Preferences.Remove("FullName");
             await _cartRepository.DeleteAllAsync();
             await _customerRepository.DeleteAllAsync();
             await _orderRepository.DeleteAllAsync();

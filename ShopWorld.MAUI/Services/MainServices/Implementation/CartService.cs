@@ -130,6 +130,11 @@ namespace ShopWorld.MAUI.Services
             return CartObject;
         }
 
+        public async Task<int> CountAsync()
+        {
+            return await _cartRepository.CountAsync();
+        }
+
         public async Task<bool> RemoveCartItem(CartModel CartObject)
         {
             await _cartRepository.DeleteAsync(CartObject);
