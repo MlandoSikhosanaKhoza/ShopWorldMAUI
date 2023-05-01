@@ -11,7 +11,7 @@
                HeightRequest="{OnIdiom Desktop=300,Tablet=200,Phone=120,Default=250}" 
                Source="shop_world_logo.png"/>
         <ActivityIndicator Grid.RowSpan="2" IsVisible="{Binding IsBusy}" IsRunning="{Binding IsBusy}" VerticalOptions="CenterAndExpand" HorizontalOptions="CenterAndExpand"/>
-        <Button Text="Login as User" IsVisible="{Binding IsNotBusy}" Command="{Binding LoginAsUserCommand}" Margin="4"/>
+        <Button Text="Login as User" IsVisible="{Binding MustDisplayLoginButtons}" Command="{Binding LoginAsUserCommand}" Margin="4"/>
         <!--This will be implemented at a later stage-->
         <Button Text="Login as Admin" Command="{Binding LoginAsAdminCommand}" IsVisible="false" Margin="4"/>
     </VerticalStackLayout>

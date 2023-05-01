@@ -1,4 +1,5 @@
 ﻿using CommunityToolkit.Maui.Views;
+using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using ShopWorld.MAUI.Services;
 using ShopWorld.MAUI.Swagger;
@@ -33,6 +34,8 @@ namespace ShopWorld.MAUI.ViewModels
             _orderItemService = orderItemService;
             _shopWorldClient = shopWorldClient;
         }
+        [ObservableProperty]
+        private bool mustDisplayLoginButtons=false;
 
         [RelayCommand]
         private async void LoginAsUser()
@@ -73,6 +76,10 @@ namespace ShopWorld.MAUI.ViewModels
                         /* Implementation will take place at a later stage */
                         break;
                 }
+            }
+            else
+            {
+                MustDisplayLoginButtons = true;
             }
             IsBusy= false;
         }
