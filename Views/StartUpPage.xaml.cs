@@ -6,9 +6,10 @@ public partial class StartUpPage : ContentPage
 {
 	public StartUpPage(StartUpViewModel viewModel)
 	{
-		InitializeComponent();
+        BindingContext = _viewModel = viewModel;
+        InitializeComponent();
 		Shell.SetNavBarIsVisible(this,false);
-		BindingContext = _viewModel = viewModel;
+		
 	}
 
 	private StartUpViewModel _viewModel;

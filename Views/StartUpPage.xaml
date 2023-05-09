@@ -6,12 +6,9 @@
              x:DataType="viewModels:StartUpViewModel"
              xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
              Title="StartUpPage">
-    <ContentPage.Behaviors></ContentPage.Behaviors>
     <VerticalStackLayout VerticalOptions="CenterAndExpand" HorizontalOptions="CenterAndExpand" >
         <Image  Margin="4" WidthRequest="{OnIdiom Desktop=300,Tablet=200,Phone=120,Default=250}" HeightRequest="{OnIdiom Desktop=300,Tablet=200,Phone=120,Default=250}" Source="shop_world_logo.png">
-            <Image.Triggers>
-                
-            </Image.Triggers>
+            
         </Image>
         <Button Text="Login as User" Command="{Binding LoginAsUserCommand}" Margin="4"/>
         <Button Text="Login as Admin" Command="{Binding LoginAsAdminCommand}" Margin="4"/>

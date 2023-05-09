@@ -18,7 +18,7 @@ namespace ShopWorld.MAUI.Swagger
         private System.Net.Http.HttpClient _httpClient;
         private System.Lazy<Newtonsoft.Json.JsonSerializerSettings> _settings;
 
-        public ShopWorldClient(HttpClientService httpClientService)
+        public ShopWorldClient(IHttpClientService httpClientService)
         {
             _httpClient = httpClientService.GetShopWorldClient();
             BaseUrl = _httpClient.BaseAddress.AbsoluteUri;

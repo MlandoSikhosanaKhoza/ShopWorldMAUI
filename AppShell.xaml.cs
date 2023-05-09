@@ -1,4 +1,5 @@
-﻿using ShopWorld.MAUI.Services;
+﻿using ShopWorld.MAUI.Repository;
+using ShopWorld.MAUI.Services;
 using ShopWorld.MAUI.Views;
 
 namespace ShopWorld.MAUI;
@@ -6,7 +7,7 @@ namespace ShopWorld.MAUI;
 public partial class AppShell : Shell
 {
     private INavigationService _navigationService;
-	public AppShell(INavigationService navigationService)
+	public AppShell(INavigationService navigationService,IUnitOfWork unitOfWork)
 	{
 		InitializeComponent();
         _navigationService = navigationService;
