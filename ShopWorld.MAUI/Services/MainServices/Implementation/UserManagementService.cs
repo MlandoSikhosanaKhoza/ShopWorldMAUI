@@ -2,6 +2,7 @@
 using ShopWorld.MAUI.Swagger;
 using ShopWorld.MAUI.Views;
 using ShopWorld.Shared;
+using ShopWorld.Shared.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,34 +16,50 @@ namespace ShopWorld.MAUI.Services
         private readonly ShopWorldClient _shopWorldClient;
         private IAuthorizationService _authorizationService;
         private INavigationService _navigationService;
+        private IConnectivity _connectivity;
         public UserManagementService(ShopWorldClient shopWorldClient,
             IAuthorizationService authorizationService,
-            INavigationService navigationService)
+            INavigationService navigationService,IConnectivity connectivity)
         {
             _shopWorldClient = shopWorldClient;
             _authorizationService = authorizationService;
             _navigationService = navigationService;
+            _connectivity = connectivity;
         }
 
         public async Task<LoginResult> LoginAsUser(string Mobile)
         {
             LoginResult login = new LoginResult();
-            try
+            if(_connectivity.NetworkAccess==NetworkAccess.Internet)
             {
-                login = await _shopWorldClient.Authorization_LoginAsync(new MobileLoginInputModel { MobileNumber = Mobile });
-                if (login.IsAuthorized)
+                try
                 {
-                    /* Store the JWT Token */
-                    await _authorizationService.SetLoginToken(login.JwtToken);
+                    login = await _shopWorldClient.Authorization_LoginAsync(new MobileLoginInputModel { MobileNumber = Mobile });
+                    if (login.IsAuthorized)
+                    {
+                        /* Store the JWT Token */
+                        await _authorizationService.SetLoginToken(login.JwtToken);
 
-                    _shopWorldClient.AuthorizeClient();
+                        _shopWorldClient.AuthorizeClient();
+                    }
+                }
+                catch (ApiException ex)
+                {
+                    login.IsAuthorized = false;
                 }
             }
-            catch (ApiException ex)
+            else
             {
-                login.IsAuthorized = false;
+                login.IsAuthorized=false;
             }
+            
             return login;
+        }
+
+        public async Task<Customer> Register(Customer CustomerObj)
+        {
+            Customer customer=await _shopWorldClient.Customer_AddCustomerAsync(CustomerObj);
+            return customer;
         }
 
         public async Task Logout()

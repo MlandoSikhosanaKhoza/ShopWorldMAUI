@@ -56,6 +56,7 @@ namespace ShopWorld.MAUI.ViewModels
                 return;
             }
             IsBusy = true;
+            MustDisplayLoginButtons = false;
             /* Download the items I can purchase */
             await _itemService.CheckAndDownload();
 

@@ -17,11 +17,18 @@
     <!--Here is the Login Page which is access when the user isn't logged in-->
     <ShellItem>
         <ShellContent
-        Title="Home"
+        Title="Login"
         ContentTemplate="{DataTemplate views:LoginPage}"
         Route="LoginPage" />
     </ShellItem>
-
+    
+    <ShellItem>
+        <ShellContent
+        Title="Register"
+        ContentTemplate="{DataTemplate views:RegisterPage}"
+        Route="RegisterPage" />
+    </ShellItem>
+    
     <TabBar>
         <Tab Title="Shopping">
             <Tab.Icon>

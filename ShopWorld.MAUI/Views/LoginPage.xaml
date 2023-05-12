@@ -5,15 +5,114 @@
              xmlns:viewModels="clr-namespace:ShopWorld.MAUI.ViewModels"
              x:DataType="viewModels:LoginViewModel"
              Title="Login">
-    <StackLayout Orientation="Vertical" VerticalOptions="FillAndExpand">
-        <Label 
-            Text="Login"
-            VerticalOptions="Center" FontSize="Large"
-            HorizontalOptions="Center" Margin="24" />
-        <Image  Margin="4" WidthRequest="{OnIdiom Desktop=300,Tablet=200,Phone=120,Default=250}" HeightRequest="{OnIdiom Desktop=300,Tablet=200,Phone=120,Default=250}" Source="shop_world_logo.png">
+    <StackLayout VerticalOptions="FillAndExpand">
+        <VisualStateManager.VisualStateGroups>
+            <VisualStateGroup>
+                <VisualState x:Name="SmallVs">
+                    <VisualState.StateTriggers>
+                        <AdaptiveTrigger MinWindowWidth="0"/>
+                    </VisualState.StateTriggers>
+                    <VisualState.Setters>
+                        <Setter Property="Orientation" Value="Vertical"/>
+                    </VisualState.Setters>
+                </VisualState>
+                <VisualState x:Name="MediumVs">
+                    <VisualState.StateTriggers>
+                        <AdaptiveTrigger MinWindowWidth="800"/>
+                    </VisualState.StateTriggers>
+                    <VisualState.Setters>
+                        <Setter Property="Orientation" Value="Horizontal"/>
+                    </VisualState.Setters>
+                </VisualState>
+            </VisualStateGroup>
+        </VisualStateManager.VisualStateGroups>
 
-        </Image>
-        <Entry Placeholder="Enter your number" Text="{Binding MobileNumber}" Margin="4" WidthRequest="{OnIdiom Desktop=300,Tablet=200,Phone=120,Default=250}"/>
-        <Button Text="Login" IsEnabled="{Binding IsNotBusy}" Margin="4" Command="{Binding LoginCommand}"  WidthRequest="{OnIdiom Desktop=300,Tablet=200,Phone=120,Default=250}"></Button>
+        <Grid RowDefinitions="*,*,*,*,*,*" ColumnDefinitions="*,*,*,*,*,*" HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand">
+            
+            <Image  Margin="4" HorizontalOptions="Center" VerticalOptions="Center" Source="shop_world_logo.png">
+                <VisualStateManager.VisualStateGroups>
+                    <VisualStateGroup>
+                        <VisualState x:Name="SmallVs1">
+                            <VisualState.StateTriggers>
+                                <AdaptiveTrigger MinWindowWidth="0"/>
+                            </VisualState.StateTriggers>
+                            <VisualState.Setters>
+                                <Setter Property="Grid.Row" Value="1"/>
+                                <Setter Property="Grid.Column" Value="1"/>
+                                <Setter Property="Grid.RowSpan" Value="4"/>
+                                <Setter Property="Grid.ColumnSpan" Value="4"/>
+                            </VisualState.Setters>
+                        </VisualState>
+                        <VisualState x:Name="MediumVs1">
+                            <VisualState.StateTriggers>
+                                <AdaptiveTrigger MinWindowWidth="800"/>
+                            </VisualState.StateTriggers>
+                            <VisualState.Setters>
+                                <Setter Property="Grid.Row" Value="2"/>
+                                <Setter Property="Grid.Column" Value="2"/>
+                                <Setter Property="Grid.ColumnSpan" Value="2"/>
+                                <Setter Property="Grid.RowSpan" Value="2"/>
+                            </VisualState.Setters>
+                        </VisualState>
+                    </VisualStateGroup>
+                </VisualStateManager.VisualStateGroups>
+            </Image>
+            <Label Text="Login" Grid.ColumnSpan="6" Grid.Column="0" Grid.Row="5" FontSize="Medium"
+            HorizontalOptions="CenterAndExpand">
+                <VisualStateManager.VisualStateGroups>
+                    <VisualStateGroup>
+                        <VisualState x:Name="SmallVs3">
+                            <VisualState.StateTriggers>
+                                <AdaptiveTrigger MinWindowWidth="0"/>
+                            </VisualState.StateTriggers>
+                            <VisualState.Setters>
+                                <Setter Property="IsVisible" Value="true"/>
+                            </VisualState.Setters>
+                        </VisualState>
+                        <VisualState x:Name="MediumVs3">
+                            <VisualState.StateTriggers>
+                                <AdaptiveTrigger MinWindowWidth="800"/>
+                            </VisualState.StateTriggers>
+                            <VisualState.Setters>
+                                <Setter Property="IsVisible" Value="false"/>
+                            </VisualState.Setters>
+                        </VisualState>
+                    </VisualStateGroup>
+                </VisualStateManager.VisualStateGroups>
+            </Label>
+        </Grid>
+        <VerticalStackLayout  HorizontalOptions="FillAndExpand" VerticalOptions="CenterAndExpand">
+            <Label Text="Login" VerticalOptions="Center" FontSize="Large"
+            HorizontalOptions="Center" Margin="24">
+                <VisualStateManager.VisualStateGroups>
+                    <VisualStateGroup>
+                        <VisualState x:Name="SmallVs2">
+                            <VisualState.StateTriggers>
+                                <AdaptiveTrigger MinWindowWidth="0"/>
+                            </VisualState.StateTriggers>
+                            <VisualState.Setters>
+                                <Setter Property="IsVisible" Value="false"/>
+                            </VisualState.Setters>
+                        </VisualState>
+                        <VisualState x:Name="MediumVs2">
+                            <VisualState.StateTriggers>
+                                <AdaptiveTrigger MinWindowWidth="800"/>
+                            </VisualState.StateTriggers>
+                            <VisualState.Setters>
+                                <Setter Property="IsVisible" Value="true"/>
+                            </VisualState.Setters>
+                        </VisualState>
+                    </VisualStateGroup>
+                </VisualStateManager.VisualStateGroups>
+            </Label>
+            <Entry Placeholder="Enter your number" Text="{Binding MobileNumber}" IsEnabled="{Binding IsNotBusy}" Margin="4" WidthRequest="{OnIdiom Desktop=300,Tablet=200,Phone=120,Default=250}"/>
+            <Button Text="Login" IsEnabled="{Binding IsNotBusy}" Margin="4" Command="{Binding LoginCommand}"  WidthRequest="{OnIdiom Desktop=300,Tablet=200,Phone=120,Default=250}"></Button>
+            <Label Text="Register" HorizontalOptions="CenterAndExpand">
+                <Label.GestureRecognizers>
+                    <TapGestureRecognizer NumberOfTapsRequired="1" Command="{Binding RegisterCommand}"/>
+                </Label.GestureRecognizers>
+            </Label>
+        </VerticalStackLayout>
+        
     </StackLayout>
 </ContentPage>

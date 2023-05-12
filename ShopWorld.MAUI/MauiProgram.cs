@@ -22,6 +22,10 @@ public static class MauiProgram
                 fonts.AddFont("OpenSans-Semibold.ttf", "OpenSansSemibold");
                 fonts.AddFont("fa-regular-900.ttf", "FontAwesome");
             });
+        #region Features
+        builder.Services.AddSingleton<IConnectivity>(Connectivity.Current);
+        #endregion Features
+
         #region Services
         /* Setup Services / Foundation Services */
         builder.Services.AddSingleton<IAuthorizationService, AuthorizationService>();
@@ -44,6 +48,7 @@ public static class MauiProgram
         builder.Services.AddSingleton<StartUpPage>();
         /* Has its own navigation stack */
         builder.Services.AddSingleton<LoginPage>();
+        builder.Services.AddSingleton<RegisterPage>();
         /*Has its own navigation stacks*/
         builder.Services.AddSingleton<ShoppingPage>();
         builder.Services.AddTransient<ShoppingCartPage>();
@@ -55,6 +60,7 @@ public static class MauiProgram
         #region ViewModels
         builder.Services.AddSingleton<StartUpViewModel>();
         builder.Services.AddSingleton<LoginViewModel>();
+        builder.Services.AddSingleton<RegisterViewModel>();
 
         builder.Services.AddSingleton<ShoppingViewModel>();
         /* Shopping Cart is dependant on the ShoppingViewModel its based on the items purchased inside the ShoppingViewModel */
