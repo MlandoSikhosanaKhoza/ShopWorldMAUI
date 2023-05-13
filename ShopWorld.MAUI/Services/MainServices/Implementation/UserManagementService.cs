@@ -67,5 +67,11 @@ namespace ShopWorld.MAUI.Services
             await _authorizationService.WipePersonalDataAsync();
             await _navigationService.NavigateToAsync($"//{nameof(StartUpPage)}");
         }
+
+        public async Task<bool> MobileNumberExists(string Mobile)
+        {
+            bool mobileExists=await _shopWorldClient.Customer_MobileNumberExistsAsync(Mobile);
+            return mobileExists;
+        }
     }
 }

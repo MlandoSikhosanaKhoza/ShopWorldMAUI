@@ -10,6 +10,7 @@ namespace ShopWorld.MAUI.Services
 {
     public interface IUserManagementService
     {
+        Task<bool> MobileNumberExists(string Mobile);
         Task<Customer> Register(Customer CustomerObj);
         Task<LoginResult> LoginAsUser(string Mobile);
         Task Logout();

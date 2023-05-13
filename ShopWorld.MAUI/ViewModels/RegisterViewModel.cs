@@ -16,9 +16,12 @@ namespace ShopWorld.MAUI.ViewModels
     {
         private INavigationService _navigationService;
         private IUserManagementService _userManagementService;
-        public RegisterViewModel(IUserManagementService userManagementService,INavigationService navigationService) { 
+        private IConnectivity _connectivity;
+        public RegisterViewModel(IUserManagementService userManagementService,
+            INavigationService navigationService,IConnectivity connectivity) { 
             _userManagementService = userManagementService;
             _navigationService = navigationService;
+            _connectivity = connectivity;
             SetupValidation();
         }
 
@@ -48,11 +51,25 @@ namespace ShopWorld.MAUI.ViewModels
                 return;
             }
             IsBusy = true;
-            if (IsValid())
+            if (_connectivity.NetworkAccess == NetworkAccess.Internet)
             {
-                await _userManagementService.Register(new Customer { Name=FirstName.Value,Surname=LastName.Value,Mobile=Mobile.Value });
-                await Shell.Current.DisplayAlert("Success!", "You have been successfully registers", "Continue to Login");
-
+                if (IsValid())
+                { 
+                    if(!await _userManagementService.MobileNumberExists(Mobile.Value))
+                    {
+                        await _userManagementService.Register(new Customer { Name = FirstName.Value, Surname = LastName.Value, Mobile = Mobile.Value });
+                        await Shell.Current.DisplayAlert("Success!", "You have been successfully registers", "Continue to Login");
+                        await _navigationService.NavigateToAsync($"//{nameof(LoginPage)}");
+                    }
+                    else
+                    {
+                        await Shell.Current.DisplayAlert("Mobile number already exists!", "Please ensure you use a mobile number that hasn't been used before.", "Try again");
+                    }
+                }
+            }
+            else
+            {
+                await Shell.Current.DisplayAlert("Connect to the Internet", "You have a problem with your connection", "OK");
             }
             IsBusy = false;
         }
@@ -81,12 +98,9 @@ namespace ShopWorld.MAUI.ViewModels
             }
             /* Finally add field specific validation */
             Mobile.Validations.Add(new NumbersOnlyRule<string> { ValidationMessage = "Only numbers allowed" });
+            Mobile.Validations.Add(new MinLengthRule<string> { MinLength=10, ValidationMessage = $"Mobile number requires at least {10} numbers" });
+            Mobile.Validations.Add(new MaxLengthRule<string> { MaxLength=12, ValidationMessage = $"Mobile number can have a maximum of {12} numbers" });
         }
 
-        //Incase I fetch anything
-        public void OnAppearingAsync()
-        {
-            
-        }
     }
 }

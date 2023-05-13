@@ -11,9 +11,4 @@ public partial class RegisterPage : ContentPage
 		BindingContext=_viewModel=viewModel;
 	}
 
-    protected override void OnAppearing()
-    {
-        base.OnAppearing();
-		MainThread.BeginInvokeOnMainThread(_viewModel.OnAppearingAsync);
-    }
 }
