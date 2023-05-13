@@ -82,6 +82,26 @@
             </Label>
         </Grid>
         <VerticalStackLayout  HorizontalOptions="FillAndExpand" VerticalOptions="CenterAndExpand">
+            <VisualStateManager.VisualStateGroups>
+                <VisualStateGroup>
+                    <VisualState x:Name="SmallVs4">
+                        <VisualState.StateTriggers>
+                            <AdaptiveTrigger MinWindowWidth="0"/>
+                        </VisualState.StateTriggers>
+                        <VisualState.Setters>
+                            <Setter Property="VerticalOptions" Value="FillAndExpand"/>
+                        </VisualState.Setters>
+                    </VisualState>
+                    <VisualState x:Name="MediumVs4">
+                        <VisualState.StateTriggers>
+                            <AdaptiveTrigger MinWindowWidth="800"/>
+                        </VisualState.StateTriggers>
+                        <VisualState.Setters>
+                            <Setter Property="VerticalOptions" Value="CenterAndExpand"/>
+                        </VisualState.Setters>
+                    </VisualState>
+                </VisualStateGroup>
+            </VisualStateManager.VisualStateGroups>
             <Label Text="Login" VerticalOptions="Center" FontSize="Large"
             HorizontalOptions="Center" Margin="24">
                 <VisualStateManager.VisualStateGroups>

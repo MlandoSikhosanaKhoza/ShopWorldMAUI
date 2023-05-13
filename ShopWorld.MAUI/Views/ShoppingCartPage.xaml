@@ -43,5 +43,9 @@
             </CollectionView>
             <Button IsVisible="{Binding IsDisplayingCheckoutButton}" IsEnabled="{Binding IsNotBusy}" Text="Checkout" Command="{Binding CheckoutCommand}" Margin="4" />
         </VerticalStackLayout>
+        <ActivityIndicator IsVisible="{Binding IsBusy}" Grid.Column="0" Grid.Row="0"
+                           IsRunning="{Binding IsBusy}" Grid.ColumnSpan="6"
+                           VerticalOptions="CenterAndExpand" 
+                           HorizontalOptions="CenterAndExpand"/>
     </Grid>
 </ContentPage>

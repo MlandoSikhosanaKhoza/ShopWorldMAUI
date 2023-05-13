@@ -23,7 +23,7 @@
         
         <ScrollView Grid.Row="1" IsVisible="{Binding IsNotLoadingItems}" HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand" VerticalScrollBarVisibility="Always">
             <VerticalStackLayout>
-                <FlexLayout BindableLayout.ItemsSource="{Binding Items}" Wrap="Wrap" JustifyContent="{OnIdiom Default=Left, Phone=Center}" HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand">
+                <FlexLayout BindableLayout.ItemsSource="{Binding Items}" Wrap="Wrap" JustifyContent="{OnIdiom Default=Start, Phone=Center}" HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand">
                     <BindableLayout.ItemTemplate>
                         <DataTemplate x:DataType="model:ItemModel">
 

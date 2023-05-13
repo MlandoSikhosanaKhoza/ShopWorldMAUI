@@ -24,6 +24,7 @@ namespace ShopWorld.MAUI.ViewModels
             _navigationService = navigationService;
             _cartService = cartService;
             _shoppingViewModel  = shoppingViewModel;
+            SetupShoppingCart();
         }
         [ObservableProperty]
         private ObservableCollection<CartModel> myOrderItems=new ObservableCollection<CartModel>();
@@ -101,11 +102,11 @@ namespace ShopWorld.MAUI.ViewModels
             IsBusy = false;
         }
 
-        
-        public void OnAppearing() {
+        private void SetupShoppingCart()
+        {
             MyOrderItems = _shoppingViewModel.MyOrderItems;
             TotalBeforeTax = MyOrderItems.Sum(oi => oi.Price * oi.Quantity);
-            TotalAfterTax = TotalBeforeTax * (Tax.VAT+1);
+            TotalAfterTax = TotalBeforeTax * (Tax.VAT + 1);
         }
     }
 }
