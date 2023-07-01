@@ -1,10 +1,12 @@
 ﻿using ShopWorld.MAUI.Models;
 using ShopWorld.MAUI.Repository;
 using ShopWorld.MAUI.Swagger;
+using ShopWorld.MAUI.ViewModels;
 using ShopWorld.Shared;
 using ShopWorld.Shared.Entities;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -97,6 +99,16 @@ namespace ShopWorld.MAUI.Services
             {
                 return false;
             }
+        }
+
+        public async Task<ObservableCollection<BindCartViewModel>> GetCartViewModelList(ObservableCollection<CartModel> myOrderItems)
+        {
+            ObservableCollection<BindCartViewModel> cartViewModels=new ObservableCollection<BindCartViewModel>();
+            foreach(var item in myOrderItems)
+            {
+                cartViewModels.Add(new BindCartViewModel(item));
+            }
+            return cartViewModels;
         }
 
         public async Task<CartModel> AddItemToCartAsync(ItemModel ItemObject)

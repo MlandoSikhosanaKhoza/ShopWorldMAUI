@@ -1,5 +1,7 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using CommunityToolkit.Mvvm.Messaging;
+using ShopWorld.MAUI.Messages;
 using ShopWorld.MAUI.Models;
 using ShopWorld.MAUI.Services;
 using ShopWorld.MAUI.Views;
@@ -13,21 +15,46 @@ using System.Threading.Tasks;
 
 namespace ShopWorld.MAUI.ViewModels
 {
+    [QueryProperty(nameof(MyOrderItems),nameof(MyOrderItems))]
     public partial class ShoppingCartViewModel:BaseViewModel
     {
-        private INavigationService _navigationService;
-        private ShoppingViewModel _shoppingViewModel;
-        private ICartService _cartService;
-        public ShoppingCartViewModel(ShoppingViewModel shoppingViewModel,
+        private readonly INavigationService _navigationService;
+        private readonly ICartService _cartService;
+        private readonly IDispatcherTimer _updateTimer;
+        public ShoppingCartViewModel(
             INavigationService navigationService,
-            ICartService cartService) { 
+            ICartService cartService,IUpdateCartItemTimedService updateCartItemTimedService) { 
             _navigationService = navigationService;
             _cartService = cartService;
-            _shoppingViewModel  = shoppingViewModel;
-            SetupShoppingCart();
+            
+            StrongReferenceMessenger.Default.Register<UpdateCartItemMessage>(this, (recipient,message) => {
+                MainThread.BeginInvokeOnMainThread(() =>
+                {
+                    updateCartItemTimedService.Execute(message.Value);
+                    CalculateTotals();
+                });
+            });
+            StrongReferenceMessenger.Default.Register<DeleteCartItemMessage>(this, (recipient, message) => {
+                MainThread.BeginInvokeOnMainThread(async () =>
+                {
+                    IsBusy = true;
+                    await _cartService.RemoveCartItem(message.Value);
+                    BindCartViewModel cartViewModel = MyOrderDisplayItems.Where(cm => cm.ItemId == message.Value.ItemId).FirstOrDefault();
+                    MyOrderDisplayItems.Remove(cartViewModel);
+                    CartModel cartItemToDelete = MyOrderItems.FirstOrDefault(i => i.ItemId == message.Value.ItemId);
+                    if (cartItemToDelete != null)
+                    {
+                        MyOrderItems.Remove(cartItemToDelete);
+                    }
+                    CalculateTotals();
+                    IsBusy = false;
+                });
+            });
         }
+        private CartModel CartToUpdate { get; set; }
+        public ObservableCollection<CartModel> MyOrderItems { get; set; }
         [ObservableProperty]
-        private ObservableCollection<CartModel> myOrderItems=new ObservableCollection<CartModel>();
+        private ObservableCollection<BindCartViewModel> myOrderDisplayItems=new ObservableCollection<BindCartViewModel>();
         [ObservableProperty]
         [NotifyPropertyChangedFor(nameof(IsDisplayingCheckoutButton))]
         private decimal totalBeforeTax;
@@ -51,62 +78,30 @@ namespace ShopWorld.MAUI.ViewModels
             IsBusy = true;
             /* I might actually tell the user that the purchase was made successfully */
             bool isSyncedPurchases=await _cartService.SyncPurchases(MyOrderItems.ToList());
-            MyOrderItems = new ObservableCollection<CartModel>(await _cartService.GetCartItemsAsync());
+            MyOrderItems.Clear();
+            MyOrderDisplayItems.Clear();
+            StrongReferenceMessenger.Default.Send<ClearCartMessage>(new ClearCartMessage(true));
             TotalBeforeTax = MyOrderItems.Sum(oi => oi.Price * oi.Quantity);
             TotalAfterTax = TotalBeforeTax * (Tax.VAT + 1);
             IsBusy = false;
         }
-
-        [RelayCommand]
-        private async void IncreaseQuantity(CartModel cartModel)
+        
+        private void CalculateTotals()
         {
-            if(IsBusy) return;
-            IsBusy = true;
-            cartModel.Quantity++;
-            await _cartService.UpdateCartItem(cartModel);
-            MyOrderItems = new ObservableCollection<CartModel>(await _cartService.GetCartItemsAsync());
             TotalBeforeTax = MyOrderItems.Sum(oi => oi.Price * oi.Quantity);
             TotalAfterTax = TotalBeforeTax * (Tax.VAT + 1);
-            IsBusy = false;
         }
 
-        [RelayCommand]
-        private async void DecreaseQuantity(CartModel cartModel)
+        private async Task SetupShoppingCart()
         {
-            if (IsBusy) return;
-            IsBusy = true;
-            cartModel.Quantity--;
-            if (cartModel.Quantity==0)
-            {
-                await _cartService.RemoveCartItem(cartModel);
-            }
-            else
-            {
-                await _cartService.UpdateCartItem(cartModel);
-            }
-            MyOrderItems = new ObservableCollection<CartModel>(await _cartService.GetCartItemsAsync());
+            MyOrderDisplayItems = await _cartService.GetCartViewModelList(MyOrderItems);
             TotalBeforeTax = MyOrderItems.Sum(oi => oi.Price * oi.Quantity);
             TotalAfterTax = TotalBeforeTax * (Tax.VAT + 1);
-            IsBusy = false;
         }
 
-        [RelayCommand]
-        private async void RemoveCartItem(CartModel cartModel)
+        public async void OnAppearingAsync()
         {
-            if (IsBusy) return;
-            IsBusy = true;
-            await _cartService.RemoveCartItem(cartModel);
-            MyOrderItems = new ObservableCollection<CartModel>(await _cartService.GetCartItemsAsync());
-            TotalBeforeTax = MyOrderItems.Sum(oi => oi.Price * oi.Quantity);
-            TotalAfterTax = TotalBeforeTax * (Tax.VAT + 1);
-            IsBusy = false;
-        }
-
-        private void SetupShoppingCart()
-        {
-            MyOrderItems = _shoppingViewModel.MyOrderItems;
-            TotalBeforeTax = MyOrderItems.Sum(oi => oi.Price * oi.Quantity);
-            TotalAfterTax = TotalBeforeTax * (Tax.VAT + 1);
+            await SetupShoppingCart();
         }
     }
 }

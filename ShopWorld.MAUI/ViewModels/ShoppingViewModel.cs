@@ -1,5 +1,7 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using CommunityToolkit.Mvvm.Messaging;
+using ShopWorld.MAUI.Messages;
 using ShopWorld.MAUI.Models;
 using ShopWorld.MAUI.Services;
 using ShopWorld.MAUI.Views;
@@ -25,6 +27,34 @@ namespace ShopWorld.MAUI.ViewModels
             _itemService = itemService;
             _cartService = cartService;
             _navigationService = navigationService;
+            StrongReferenceMessenger.Default.Register<UpdateCartItemMessage>(this, (recipient, message) => {
+                MainThread.BeginInvokeOnMainThread(() =>
+                {
+                    CartModel item = message.Value;
+                    MyOrderItems.FirstOrDefault(i=>i.CartId==item.CartId).Quantity = item.Quantity;
+                    OnPropertyChanged(nameof(NumOfWantedItems));
+                });
+            });
+            StrongReferenceMessenger.Default.Register<DeleteCartItemMessage>(this, (recipient, message) => {
+                MainThread.BeginInvokeOnMainThread(() =>
+                {
+                    CartModel cartItemToDelete=MyOrderItems.FirstOrDefault(i=>i.ItemId == message.Value.ItemId);
+                    if (cartItemToDelete != null)
+                    {
+                        MyOrderItems.Remove(cartItemToDelete);
+                    }
+                });
+            });
+            StrongReferenceMessenger.Default.Register<ClearCartMessage>(this, (recipient, message) => {
+                MyOrderItems.Clear();
+            });
+            StrongReferenceMessenger.Default.Register<LogoutMessage>(this, (recipient, message) => {
+                MainThread.BeginInvokeOnMainThread(() =>
+                {
+                    MyOrderItems = new ObservableCollection<CartModel>();
+                    HasAccessedPage = false;
+                });
+            });
         }
         [ObservableProperty]
         private ObservableCollection<ItemModel> items;
@@ -33,7 +63,8 @@ namespace ShopWorld.MAUI.ViewModels
         [ObservableProperty]
         [NotifyPropertyChangedFor(nameof(IsNotLoadingItems))]
         private bool isLoadingItems = false;
-
+        [ObservableProperty]
+        private bool hasAccessedPage = false;
         public bool IsNotLoadingItems => !IsLoadingItems;
         public int NumOfWantedItems => MyOrderItems.Sum(oi => oi.Quantity);
 
@@ -76,6 +107,10 @@ namespace ShopWorld.MAUI.ViewModels
             }
             else
             {
+                //Theres an internal bug with the persistence of the OrderItems
+                //This is a temporary fix (I'll find a better fix for this)
+                addedCartItem.Quantity = 1;
+                await _cartService.UpdateCartItem(addedCartItem);
                 MyOrderItems.Add(addedCartItem);
             }
             OnPropertyChanged(nameof(NumOfWantedItems));
@@ -92,16 +127,13 @@ namespace ShopWorld.MAUI.ViewModels
             if(Items==null) {
                 Items = new ObservableCollection<ItemModel>(await _itemService.GetAllItemsAsync());
             }
-            if((await _cartService.CountAsync())>0)
+            if((await _cartService.CountAsync())>0  && !HasAccessedPage)
             {
                 MyOrderItems = new ObservableCollection<CartModel>(await _cartService.GetCartItemsAsync());
             }
-            else
-            {
-                MyOrderItems = new ObservableCollection<CartModel>();
-            }
             OnPropertyChanged(nameof(NumOfWantedItems));
             IsBusy = false;
+            HasAccessedPage = true;
         }
     }
 }

@@ -13,25 +13,25 @@
         <VerticalStackLayout Grid.Column="{OnIdiom Phone=0,Tablet=1,Desktop=1}" Grid.ColumnSpan="{OnIdiom Phone=6,Tablet=4,Desktop=4}">
             <Label Text="{Binding TotalBeforeTax,StringFormat='Total excl VAT R {0:F2}'}"></Label>
             <Label Text="{Binding TotalAfterTax,StringFormat='Total incl VAT R {0:F2}'}"></Label>
-            <CollectionView ItemsSource="{Binding MyOrderItems}">
+            <CollectionView ItemsSource="{Binding MyOrderDisplayItems}">
                 <CollectionView.ItemTemplate>
-                    <DataTemplate x:DataType="model:CartModel">
+                    <DataTemplate x:DataType="viewModels:BindCartViewModel">
                         <Frame Margin="4">
                             <Grid ColumnDefinitions="*,*,*,Auto,Auto,Auto">
                                 <Label VerticalOptions="Center" Grid.Column="0" Text="{Binding ItemName}"/>
                                 <Label VerticalOptions="Center" Grid.Column="1" Text="{Binding Quantity}"/>
                                 <Label VerticalOptions="Center" Grid.Column="2" Text="{Binding Price,StringFormat='R {0:F2}'}"/>
-                                <ImageButton Grid.Column="3" Command="{Binding Source={RelativeSource AncestorType={x:Type viewModels:ShoppingCartViewModel}},Path=IncreaseQuantityCommand}" CommandParameter="{Binding .}">
+                                <ImageButton IsEnabled="{Binding Source={RelativeSource AncestorType={x:Type viewModels:ShoppingCartViewModel}},Path=IsNotBusy}" Grid.Column="3" Command="{Binding IncreaseQuantityCommand}">
                                     <ImageButton.Source>
                                         <FontImageSource FontFamily="FontAwesome" Color="Black" Glyph="{x:Static model:IconFont.Plus}"/>
                                     </ImageButton.Source>
                                 </ImageButton>
-                                <ImageButton Grid.Column="4" Command="{Binding Source={RelativeSource AncestorType={x:Type viewModels:ShoppingCartViewModel}},Path=DecreaseQuantityCommand}" CommandParameter="{Binding .}">
+                                <ImageButton IsEnabled="{Binding Source={RelativeSource AncestorType={x:Type viewModels:ShoppingCartViewModel}},Path=IsNotBusy}" Grid.Column="4" Command="{Binding DecreaseQuantityCommand}">
                                     <ImageButton.Source>
                                         <FontImageSource FontFamily="FontAwesome" Color="Black" Glyph="{x:Static model:IconFont.Minus}"/>
                                     </ImageButton.Source>
                                 </ImageButton>
-                                <ImageButton Grid.Column="5" Command="{Binding Source={RelativeSource AncestorType={x:Type viewModels:ShoppingCartViewModel}},Path=RemoveCartItemCommand}" CommandParameter="{Binding .}">
+                                <ImageButton IsEnabled="{Binding Source={RelativeSource AncestorType={x:Type viewModels:ShoppingCartViewModel}},Path=IsNotBusy}" Grid.Column="5" Command="{Binding DeleteCartItemCommand}">
                                     <ImageButton.Source>
                                         <FontImageSource FontFamily="FontAwesome" Color="Black" Glyph="{x:Static model:IconFont.TrashAlt}"/>
                                     </ImageButton.Source>

@@ -1,5 +1,7 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using CommunityToolkit.Mvvm.Messaging;
+using ShopWorld.MAUI.Messages;
 using ShopWorld.MAUI.Services;
 using ShopWorld.MAUI.Views;
 using System;
@@ -32,6 +34,7 @@ namespace ShopWorld.MAUI.ViewModels
         {
             await _itemService.DeleteAllItemImages();
             await _authorizationService.WipePersonalDataAsync();
+            StrongReferenceMessenger.Default.Send(new LogoutMessage(true));
             await _navigationService.NavigateToAsync($"//{nameof(StartUpPage)}");
         }
 
