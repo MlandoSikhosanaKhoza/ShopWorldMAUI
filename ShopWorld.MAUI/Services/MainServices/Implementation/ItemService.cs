@@ -1,9 +1,11 @@
 ﻿using ShopWorld.MAUI.Models;
 using ShopWorld.MAUI.Repository;
 using ShopWorld.MAUI.Swagger;
+using ShopWorld.MAUI.ViewModels;
 using ShopWorld.Shared.Entities;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -119,6 +121,17 @@ namespace ShopWorld.MAUI.Services
             {
                 return false;
             }
+        }
+
+        public async Task<ObservableCollection<BindItemViewModel>> GetAllBindableItems()
+        {
+            List<ItemModel> itemModels = await _itemRepository.GetAsync();
+            ObservableCollection<BindItemViewModel> items= new ObservableCollection<BindItemViewModel>();
+            foreach (ItemModel item in itemModels)
+            {
+                items.Add(new BindItemViewModel(item));
+            }
+            return items;
         }
 
         public async Task<List<ItemModel>> GetAllItemsAsync()

@@ -13,6 +13,7 @@ namespace ShopWorld.MAUI.Services
         Task<bool> MobileNumberExists(string Mobile);
         Task<Customer> Register(Customer CustomerObj);
         Task<LoginResult> LoginAsUser(string Mobile);
+        Task<LoginResult> LoginAsAdmin();
         Task Logout();
     }
 }

@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:models="clr-namespace:ShopWorld.MAUI.Models"
+             xmlns:viewModels="clr-namespace:ShopWorld.MAUI.ViewModels"
+             xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+             x:Class="ShopWorld.MAUI.Views.ItemPage"
+             x:DataType="viewModels:ItemViewModel"
+             Title="ItemPage">
+    <ContentPage.ToolbarItems>
+        <ToolbarItem>
+            <ToolbarItem.IconImageSource>
+                <FontImageSource FontFamily="FontAwesome" Color="White" Glyph="{x:Static models:IconFont.Camera}"/>
+            </ToolbarItem.IconImageSource>
+        </ToolbarItem>
+    </ContentPage.ToolbarItems>
+    <Grid RowDefinitions="Auto,*">
+        <Label Text="Items" FontSize="Large" HorizontalOptions="Center"/>
+        <ScrollView Grid.Row="1" IsVisible="{Binding IsNotBusy}" HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand" VerticalScrollBarVisibility="Always">
+            <VerticalStackLayout>
+                <FlexLayout BindableLayout.ItemsSource="{Binding Items}" Wrap="Wrap" JustifyContent="{OnIdiom Default=Start, Phone=Center}" HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand">
+                    <BindableLayout.ItemTemplate>
+                        <DataTemplate x:DataType="viewModels:BindItemViewModel">
+
+                            <Frame Margin="8" WidthRequest="300" HeightRequest="400">
+                                <Grid RowDefinitions="Auto,Auto,Auto,Auto">
+                                    <Image Grid.Row="0" Source="{Binding ImageName}" Margin="4" />
+                                    <Entry Grid.Row="1" Text="{Binding Description}" Margin="4" FontSize="Medium" />
+                                    <Entry Grid.Row="2" Text="{Binding Price}" Margin="4">
+                                        
+                                    </Entry>
+                                    <Button Text="Save" Grid.Row="3" Margin="4" />
+                                </Grid>
+                            </Frame>
+                        </DataTemplate>
+                    </BindableLayout.ItemTemplate>
+                </FlexLayout>
+            </VerticalStackLayout>
+        </ScrollView>
+
+        <ActivityIndicator Grid.RowSpan="2" IsVisible="{Binding IsBusy}" IsRunning="{Binding IsBusy}" VerticalOptions="CenterAndExpand" HorizontalOptions="CenterAndExpand"/>
+    </Grid>
+</ContentPage>

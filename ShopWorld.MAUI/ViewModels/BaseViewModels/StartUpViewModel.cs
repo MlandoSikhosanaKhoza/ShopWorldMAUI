@@ -20,18 +20,22 @@ namespace ShopWorld.MAUI.ViewModels
     /// </summary>
     public partial class StartUpViewModel:BaseViewModel
     {
-        private IAuthorizationService _authorizationService;
-        private INavigationService _navigationService;
-        private IItemService _itemService;
-        private IOrderItemService _orderItemService;
+        private readonly IAuthorizationService _authorizationService;
+        private readonly INavigationService _navigationService;
+        private readonly IItemService _itemService;
+        private readonly IOrderItemService _orderItemService;
+        private readonly IUserManagementService _userManagementService;
+        private readonly ISettingsService _settingsService;
         private ShopWorldClient _shopWorldClient;
-        public StartUpViewModel(IAuthorizationService authorizationService,
-            INavigationService navigationService,IItemService itemService,
+        public StartUpViewModel(IAuthorizationService authorizationService, IUserManagementService userManagementService,
+            INavigationService navigationService,IItemService itemService,ISettingsService settingsService,
             IOrderItemService orderItemService,ShopWorldClient shopWorldClient) { 
             _authorizationService = authorizationService;
             _navigationService = navigationService;
             _itemService = itemService;
             _orderItemService = orderItemService;
+            _settingsService = settingsService;
+            _userManagementService = userManagementService;
             _shopWorldClient = shopWorldClient;
         }
         [ObservableProperty]
@@ -44,9 +48,14 @@ namespace ShopWorld.MAUI.ViewModels
         }
 
         [RelayCommand]
-        private void LoginAsAdmin()
+        private async void LoginAsAdmin()
         {
-
+            LoginResult loginResult = await _userManagementService.LoginAsAdmin();
+            /* Read JWT Token for Full name*/
+            _settingsService.SetFullName(JwtTokenReader.GetTokenValue(loginResult.JwtToken, ClaimTypes.Name));
+            await _itemService.ReSynchronizeItemsAsync();
+            /* Go to the Shopping Page*/
+            await _navigationService.NavigateToAsync($"//{nameof(ItemPage)}");
         }
 
         public async void OnAppearing()
@@ -75,6 +84,7 @@ namespace ShopWorld.MAUI.ViewModels
                         break;
                     case "Admin":
                         /* Implementation will take place at a later stage */
+                        await _navigationService.NavigateToAsync($"//{nameof(ItemPage)}");
                         break;
                 }
             }

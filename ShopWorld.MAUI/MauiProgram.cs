@@ -55,13 +55,14 @@ public static class MauiProgram
         builder.Services.AddSingleton<ProfilePage>();
         builder.Services.AddSingleton<ReceiptPage>();
         builder.Services.AddSingleton<ReceiptDetailPage>();
+        builder.Services.AddSingleton<ItemPage>();
         #endregion Views
 
         #region ViewModels
         builder.Services.AddSingleton<StartUpViewModel>();
         builder.Services.AddSingleton<LoginViewModel>();
         builder.Services.AddSingleton<RegisterViewModel>();
-
+        builder.Services.AddSingleton<ItemViewModel>();
         builder.Services.AddSingleton<ShoppingViewModel>();
         /* Shopping Cart is dependant on the ShoppingViewModel its based on the items purchased inside the ShoppingViewModel */
         builder.Services.AddSingleton<ShoppingCartViewModel>();

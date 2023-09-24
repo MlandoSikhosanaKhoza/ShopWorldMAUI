@@ -73,5 +73,21 @@ namespace ShopWorld.MAUI.Services
             bool mobileExists=await _shopWorldClient.Customer_MobileNumberExistsAsync(Mobile);
             return mobileExists;
         }
+
+        public async Task<LoginResult> LoginAsAdmin()
+        {
+            LoginResult loginResult=new LoginResult();
+            if (_connectivity.NetworkAccess == NetworkAccess.Internet)
+            {
+                loginResult = await _shopWorldClient.Authorization_LoginAsAdminAsync();
+                await _authorizationService.SetLoginToken(loginResult.JwtToken);
+                _shopWorldClient.AuthorizeClient();
+            }
+            else
+            {
+                loginResult.IsAuthorized = false;
+            }
+            return loginResult;
+        }
     }
 }

@@ -58,4 +58,24 @@
             Route="ProfilePage" />
         </Tab>
     </TabBar>
+    
+    <!--Admin Settings-->
+    <TabBar>
+        <Tab Title="Items" >
+            <Tab.Icon>
+                <FontImageSource FontFamily="FontAwesome" Glyph="{x:Static models:IconFont.Cubes}" />
+            </Tab.Icon>
+            <ShellContent
+            Title="Items"
+            ContentTemplate="{DataTemplate views:ItemPage}"
+            Route="ItemPage" />
+        </Tab>
+        <Tab Title="Settings">
+            <Tab.Icon>
+                <FontImageSource FontFamily="FontAwesome" Glyph="{x:Static models:IconFont.Cog}"/>
+            </Tab.Icon>
+            <ShellContent Title="Settings"
+            ContentTemplate="{DataTemplate views:SettingsPage}" Route="SettingsPage"/>
+        </Tab>
+    </TabBar>
 </Shell>
