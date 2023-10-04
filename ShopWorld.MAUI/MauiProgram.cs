@@ -1,4 +1,5 @@
-﻿using CommunityToolkit.Maui;
+﻿using Camera.MAUI;
+using CommunityToolkit.Maui;
 using Microsoft.Extensions.Logging;
 using ShopWorld.MAUI.Repository;
 using ShopWorld.MAUI.Services;
@@ -15,6 +16,7 @@ public static class MauiProgram
         var builder = MauiApp.CreateBuilder();
         builder
             .UseMauiApp<App>()
+            .UseMauiCameraView()
             .UseMauiCommunityToolkit()
             .ConfigureFonts(fonts =>
             {
@@ -33,6 +35,7 @@ public static class MauiProgram
         builder.Services.AddSingleton<INavigationService, NavigationService>();
 
         /* Operational Services */
+        builder.Services.AddSingleton<IImageService, ImageService>();
         builder.Services.AddSingleton<IUserManagementService, UserManagementService>();
         builder.Services.AddSingleton<IItemService, ItemService>();
         builder.Services.AddSingleton<ICartService, CartService>();
@@ -52,13 +55,16 @@ public static class MauiProgram
         /*Has its own navigation stacks*/
         builder.Services.AddSingleton<ShoppingPage>();
         builder.Services.AddTransient<ShoppingCartPage>();
+        builder.Services.AddTransient<AddItemPage>();
         builder.Services.AddSingleton<ProfilePage>();
         builder.Services.AddSingleton<ReceiptPage>();
         builder.Services.AddSingleton<ReceiptDetailPage>();
         builder.Services.AddSingleton<ItemPage>();
+        builder.Services.AddSingleton<SettingsPage>();
         #endregion Views
 
         #region ViewModels
+        builder.Services.AddSingleton<SettingsViewModel>();
         builder.Services.AddSingleton<StartUpViewModel>();
         builder.Services.AddSingleton<LoginViewModel>();
         builder.Services.AddSingleton<RegisterViewModel>();
@@ -69,6 +75,7 @@ public static class MauiProgram
         builder.Services.AddSingleton<ProfileViewModel>();
         builder.Services.AddSingleton<ReceiptViewModel>();
         builder.Services.AddTransient<ReceiptDetailViewModel>();
+        builder.Services.AddTransient<AddItemViewModel>();
         #endregion ViewModels
 
         #region Clients

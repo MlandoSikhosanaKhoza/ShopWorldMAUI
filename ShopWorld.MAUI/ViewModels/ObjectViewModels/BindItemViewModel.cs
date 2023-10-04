@@ -1,5 +1,7 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using CommunityToolkit.Mvvm.Messaging;
+using ShopWorld.MAUI.Messages;
 using ShopWorld.MAUI.Models;
 using ShopWorld.MAUI.Validation;
 using ShopWorld.Shared.Entities;
@@ -17,11 +19,15 @@ namespace ShopWorld.MAUI.ViewModels
         public BindItemViewModel(ItemModel item) { 
             _item= item;
             price = item.Price.ToString("0.00");
-            O
+            ImageDisplaySource = item.ImageName;
             DescriptionCheck.Validations.Add(new IsNotNullOrEmptyRule<string>() { ValidationMessage="Required * "});
-            PriceCheck.Validations.Add(new DecimalMoreThanZero<decimal>() { ValidationMessage="Price has to be more than zero"});
+            PriceCheck.Validations.Add(new StringPriceValid<string>() { ValidationMessage="Must be number of 2 decimal places"});
         }
         private ItemModel _item;
+        private byte[] imageToUpload { get; set; } = null;
+
+        [ObservableProperty]
+        private ImageSource imageDisplaySource;
 
         public int ItemId {
             get { return _item.ItemId; }
@@ -37,29 +43,62 @@ namespace ShopWorld.MAUI.ViewModels
             get { return _item.Description; } 
             set { _item.Description = value;DescriptionCheck.Value = value; OnPropertyChanged(nameof(Description)); } 
         }
-
-        public ValidatableObject<string> DescriptionCheck = new ValidatableObject<string>();
+        [ObservableProperty]
+        private ValidatableObject<string> descriptionCheck = new ValidatableObject<string>();
         private string price;
         public string Price
         {
             get { return price; }
             set {
-                decimal outPrice=0;
-                decimal.TryParse(value, out outPrice);
-                if(outPrice > 0 && !value.EndsWith(",") && !value.EndsWith("."))
-                {
-                    _item.Price = outPrice;
-                    PriceCheck.Value = outPrice;
-                    OnPropertyChanged(nameof(Price));
-                }
+                price = value;
+                PriceCheck.Value = value;
+                OnPropertyChanged(nameof(Price));
             }
         }
-        public ValidatableObject<decimal> PriceCheck=new ValidatableObject<decimal>();
+        [ObservableProperty]
+        private ValidatableObject<string> priceCheck=new ValidatableObject<string>();
+
+        private void ForceAutoFocus()
+        {
+
+        }
+
+        [RelayCommand]
+        private async void TakePhoto()
+        {
+            FileResult result = await MediaPicker.Default.CapturePhotoAsync();
+            Stream stream = await result.OpenReadAsync();
+            using (MemoryStream ms=new MemoryStream())
+            {
+                stream.CopyTo(ms);
+                stream.Close();
+                imageToUpload = ms.ToArray();
+                stream = await result.OpenReadAsync();
+                ImageDisplaySource = ImageSource.FromStream(()=>stream);
+            }
+            
+        }
 
         [RelayCommand]
         private void Save()
         {
+            bool isValidDescription = DescriptionCheck.Validate();
+            bool isValidPriceCheck=PriceCheck.Validate();
+            if (isValidDescription && isValidPriceCheck)
+            {
+                _item.Description = Description;
+                _item.Price=decimal.Parse(Price);
 
+                StrongReferenceMessenger.Default.Send<SaveItemMessage>(new SaveItemMessage(
+                    new Shared.ItemInputModel { 
+                        ItemId = _item.ItemId,
+                        ImageName=_item.ImageName,
+                        Base64=imageToUpload==null?null:Convert.ToBase64String(imageToUpload),
+                        Description = _item.Description,
+                        Price=_item.Price,
+                        IsDeleted = false 
+                    })); 
+            }
         }
     }
 }

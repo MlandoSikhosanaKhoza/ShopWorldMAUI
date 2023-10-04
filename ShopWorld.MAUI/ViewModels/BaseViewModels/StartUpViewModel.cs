@@ -66,8 +66,6 @@ namespace ShopWorld.MAUI.ViewModels
             }
             IsBusy = true;
             MustDisplayLoginButtons = false;
-            /* Download the items I can purchase */
-            await _itemService.CheckAndDownload();
 
             /* Check secure storage for JWT Token and store it in a string */
             await _authorizationService.ProcessTokenAsync();

@@ -2,11 +2,10 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="ShopWorld.MAUI.Views.SettingsPage"
+             xmlns:viewModels="clr-namespace:ShopWorld.MAUI.ViewModels"
+             x:DataType="viewModels:SettingsViewModel"
              Title="SettingsPage">
     <VerticalStackLayout>
-        <Label 
-            Text="Welcome to .NET MAUI!"
-            VerticalOptions="Center" 
-            HorizontalOptions="Center" />
+        <Button Text="Logout" Command="{Binding LogoutCommand}"/>
     </VerticalStackLayout>
 </ContentPage>

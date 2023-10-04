@@ -8,9 +8,9 @@
              x:DataType="viewModels:ItemViewModel"
              Title="ItemPage">
     <ContentPage.ToolbarItems>
-        <ToolbarItem>
+        <ToolbarItem Command="{Binding GoToAddCommand}">
             <ToolbarItem.IconImageSource>
-                <FontImageSource FontFamily="FontAwesome" Color="White" Glyph="{x:Static models:IconFont.Camera}"/>
+                <FontImageSource FontFamily="FontAwesome" Color="White" Glyph="{x:Static models:IconFont.Plus}"/>
             </ToolbarItem.IconImageSource>
         </ToolbarItem>
     </ContentPage.ToolbarItems>
@@ -18,18 +18,42 @@
         <Label Text="Items" FontSize="Large" HorizontalOptions="Center"/>
         <ScrollView Grid.Row="1" IsVisible="{Binding IsNotBusy}" HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand" VerticalScrollBarVisibility="Always">
             <VerticalStackLayout>
-                <FlexLayout BindableLayout.ItemsSource="{Binding Items}" Wrap="Wrap" JustifyContent="{OnIdiom Default=Start, Phone=Center}" HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand">
+                <FlexLayout BindableLayout.ItemsSource="{Binding Items}" Wrap="Wrap" 
+                        JustifyContent="{OnIdiom Default=Start, Phone=Center}" 
+                        HorizontalOptions="FillAndExpand" 
+                        VerticalOptions="FillAndExpand">
                     <BindableLayout.ItemTemplate>
                         <DataTemplate x:DataType="viewModels:BindItemViewModel">
-
                             <Frame Margin="8" WidthRequest="300" HeightRequest="400">
                                 <Grid RowDefinitions="Auto,Auto,Auto,Auto">
-                                    <Image Grid.Row="0" Source="{Binding ImageName}" Margin="4" />
-                                    <Entry Grid.Row="1" Text="{Binding Description}" Margin="4" FontSize="Medium" />
-                                    <Entry Grid.Row="2" Text="{Binding Price}" Margin="4">
-                                        
-                                    </Entry>
-                                    <Button Text="Save" Grid.Row="3" Margin="4" />
+                                    <Image Grid.Row="0" Source="{Binding ImageDisplaySource}" MaximumHeightRequest="150" MaximumWidthRequest="280" Margin="4" >
+                                        <Image.GestureRecognizers>
+                                            <TapGestureRecognizer NumberOfTapsRequired="2" Command="{Binding TakePhotoCommand}"/>
+                                        </Image.GestureRecognizers>
+                                    </Image>
+                                    <VerticalStackLayout Grid.Row="1">
+                                        <Entry Text="{Binding Description}" Margin="4" FontSize="Medium"  />
+                                        <VerticalStackLayout BindableLayout.ItemsSource="{Binding DescriptionCheck.Errors}">
+                                            <BindableLayout.ItemTemplate>
+                                                <DataTemplate x:DataType="x:String">
+                                                    <Label Text="{Binding .}" TextColor="Red"/>
+                                                </DataTemplate>
+                                            </BindableLayout.ItemTemplate>
+                                        </VerticalStackLayout>
+                                    </VerticalStackLayout>
+
+                                    <VerticalStackLayout Grid.Row="2">
+                                        <Entry Text="{Binding Price}" Margin="4"/>
+                                        <VerticalStackLayout BindableLayout.ItemsSource="{Binding PriceCheck.Errors}">
+                                            <BindableLayout.ItemTemplate>
+                                                <DataTemplate x:DataType="x:String">
+                                                    <Label Text="{Binding .}" TextColor="Red"/>
+                                                </DataTemplate>
+                                            </BindableLayout.ItemTemplate>
+                                        </VerticalStackLayout>
+                                    </VerticalStackLayout>
+
+                                    <Button Text="Save" Command="{Binding SaveCommand}" Grid.Row="3" Margin="4" />
                                 </Grid>
                             </Frame>
                         </DataTemplate>

@@ -26,7 +26,6 @@
                 <FlexLayout BindableLayout.ItemsSource="{Binding Items}" Wrap="Wrap" JustifyContent="{OnIdiom Default=Start, Phone=Center}" HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand">
                     <BindableLayout.ItemTemplate>
                         <DataTemplate x:DataType="model:ItemModel">
-
                             <Frame Margin="8" WidthRequest="300" HeightRequest="400">
                                 <Grid RowDefinitions="Auto,Auto,*,Auto">
                                     <Image Grid.Row="0" Source="{Binding ImageName}" />

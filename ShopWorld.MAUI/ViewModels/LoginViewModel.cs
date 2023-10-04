@@ -15,7 +15,7 @@ namespace ShopWorld.MAUI.ViewModels
 {
     public partial class LoginViewModel:BaseViewModel
     {
-        private IUserManagementService _userManagementService;
+        private readonly IUserManagementService _userManagementService;
         private INavigationService _navigationService;
         private IAuthorizationService _authorizationService;
         private IOrderService _orderService;

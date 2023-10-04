@@ -1,5 +1,7 @@
 ﻿using ShopWorld.MAUI.Models;
 using ShopWorld.MAUI.ViewModels;
+using ShopWorld.Shared;
+using ShopWorld.Shared.Entities;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -12,6 +14,8 @@ namespace ShopWorld.MAUI.Services
     public interface IItemService
     {
         Task<bool> HasItems();
+        Task<Item> AddItemAsync(ItemInputModel item);
+        Task<bool> UpdateItemAsync(ItemInputModel item);
         Task<bool> CheckAndDownload();
         Task<bool> DownloadItemsAsync();
         Task<bool> DeleteAllItemImages();

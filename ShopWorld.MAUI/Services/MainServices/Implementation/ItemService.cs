@@ -2,8 +2,10 @@
 using ShopWorld.MAUI.Repository;
 using ShopWorld.MAUI.Swagger;
 using ShopWorld.MAUI.ViewModels;
+using ShopWorld.Shared;
 using ShopWorld.Shared.Entities;
 using System;
+using System.Buffers.Text;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
@@ -37,6 +39,62 @@ namespace ShopWorld.MAUI.Services
                 isDownloaded=await DownloadItemsAsync();
             }
             return isDownloaded;
+        }
+
+        public async Task<Item> AddItemAsync(ItemInputModel item)
+        {
+            try
+            {
+                Item itemAdded=await _shopWorldClient.Item_AddItemAsync(item);
+                if (itemAdded!=null)
+                {
+                    string base64 = item.Base64;
+                    byte[] image = Convert.FromBase64String(base64);
+                    FileStream fileStream = new FileStream(Constants.GenerateImageUrl(itemAdded.ImageName), FileMode.Create);
+                    fileStream.Write(image, 0, image.Length);
+                    fileStream.Close();
+                    await _itemRepository.InsertAsync(new ItemModel
+                    {
+                        ItemId=itemAdded.ItemId,
+                        ImageName= Constants.GenerateImageUrl(itemAdded.ImageName),
+                        Description=itemAdded.Description,
+                        Price=itemAdded.Price,
+                        DateSynced=DateTime.Now,
+                        IsDeleted=itemAdded.IsDeleted
+                    });
+                }
+                return itemAdded;
+            }
+            catch (ApiException ex)
+            {
+                await Shell.Current.DisplayAlert("Request failed", $"{ex.Message}", "OK");
+                return null;
+            }
+        }
+
+        public async Task<bool> UpdateItemAsync(ItemInputModel item)
+        {
+            try
+            {
+                bool isUpdated=await _shopWorldClient.Item_UpdateItemAsync(item);
+                if (isUpdated)
+                {
+                    ItemModel itemToUpdate =(await _itemRepository.GetAsync(it => it.ItemId == item.ItemId)).First();
+                    if (!string.IsNullOrEmpty(item.Base64))
+                    {
+                        byte[] image = Convert.FromBase64String(item.Base64);
+                        FileStream fileStream = new FileStream(Constants.GenerateImageUrl(item.ImageName), FileMode.Create);
+                        fileStream.Write(image, 0, image.Length);
+                        fileStream.Close();
+                    }
+                    itemToUpdate.Description = item.Description;
+                    itemToUpdate.Price=item.Price;
+                }
+                return isUpdated;
+            }catch(ApiException ex)
+            {
+                return false;
+            }
         }
 
         public async Task<bool> DownloadItemsAsync()

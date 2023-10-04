@@ -30,7 +30,14 @@ namespace ShopWorld.MAUI.Services
         public async Task SetLoginToken(string Token)
         {
             this.Token = Token;
-            await SecureStorage.SetAsync("login_token", Token);
+            try
+            {
+                await SecureStorage.SetAsync("login_token", Token);
+            }
+            catch (Exception)
+            {
+
+            }
         }
 
         public string GetToken()
@@ -40,7 +47,15 @@ namespace ShopWorld.MAUI.Services
 
         public async Task ProcessTokenAsync()
         {
-            Token = await SecureStorage.GetAsync("login_token");
+            try
+            {
+                Token = await SecureStorage.GetAsync("login_token");
+            }
+            catch (Exception)
+            {
+
+            }
+            
         }
 
         public async Task WipePersonalDataAsync()
