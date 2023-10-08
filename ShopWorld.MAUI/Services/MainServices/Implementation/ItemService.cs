@@ -83,7 +83,7 @@ namespace ShopWorld.MAUI.Services
                     if (!string.IsNullOrEmpty(item.Base64))
                     {
                         byte[] image = Convert.FromBase64String(item.Base64);
-                        FileStream fileStream = new FileStream(Constants.GenerateImageUrl(item.ImageName), FileMode.Create);
+                        FileStream fileStream = new FileStream(item.ImageName, FileMode.Create);
                         fileStream.Write(image, 0, image.Length);
                         fileStream.Close();
                     }

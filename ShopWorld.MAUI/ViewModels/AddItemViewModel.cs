@@ -13,6 +13,8 @@ using System.Text;
 using System.Threading.Tasks;
 using ZXing;
 using CommunityToolkit.Mvvm.Input;
+using SkiaSharp;
+using static SQLite.SQLite3;
 
 namespace ShopWorld.MAUI.ViewModels
 {
@@ -91,8 +93,16 @@ namespace ShopWorld.MAUI.ViewModels
                 {
                     
                     MemoryStream stream = (MemoryStream)await this.cameraView.TakePhotoAsync();
-                    imageToUpload = stream.ToArray();
-                    stream.Close();
+                    
+                    SKImage image = SKImage.FromEncodedData(stream);
+                    int maxDimension = 300;
+                    double newHeight = image.Height >= image.Width ? maxDimension : (((double)image.Height / (double)image.Width) * maxDimension);
+                    double newWidth = image.Width >= image.Height ? maxDimension : (((double)image.Width / (double)image.Height) * maxDimension);
+                    SKBitmap bitmap = SKBitmap.FromImage(image);
+                    SKBitmap nbitmap = bitmap.Resize(new SKImageInfo((int)newWidth,(int)newHeight), SKFilterQuality.High);
+                    image = SKImage.FromBitmap(nbitmap);
+                    SKData data = image.Encode(SKEncodedImageFormat.Png, 100);
+                    imageToUpload = data.ToArray();
                     stream = new MemoryStream(imageToUpload);
                     SnapShotSource = ImageSource.FromStream(() => stream);
                     await this.cameraView.StopCameraAsync();
@@ -135,7 +145,7 @@ namespace ShopWorld.MAUI.ViewModels
             {
                 if (imageToUpload != null)
                 {
-                    byte[] smallImage = _imageService.DownSizeImage(imageToUpload);
+                    byte[] smallImage = imageToUpload;
                     Item item = await _itemService.AddItemAsync(new Shared.ItemInputModel
                     {
                         ItemId = 0,

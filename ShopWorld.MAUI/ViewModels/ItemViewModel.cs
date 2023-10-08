@@ -58,8 +58,6 @@ namespace ShopWorld.MAUI.ViewModels
                 }
                 else
                 {
-                    byte[] smallImage=imageService.DownSizeImage(Convert.FromBase64String(message.Value.Base64));
-                    message.Value.Base64=Convert.ToBase64String(smallImage);
                     bool isUpdated = await itemService.UpdateItemAsync(message.Value);
                     if (isUpdated)
                     {

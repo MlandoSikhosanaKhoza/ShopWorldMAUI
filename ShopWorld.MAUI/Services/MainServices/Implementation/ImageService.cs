@@ -5,6 +5,9 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Maui.Layouts;
 using System.Reflection;
+using Microsoft.Maui.Graphics;
+using Microsoft.Maui.Controls;
+using SkiaSharp;
 #if IOS || ANDROID || MACCATALYST
 using Microsoft.Maui.Graphics.Platform;
 #elif WINDOWS
@@ -18,6 +21,7 @@ namespace ShopWorld.MAUI.Services
         {
             Microsoft.Maui.Graphics.IImage image;
             // PlatformImage isn't currently supported on Windows.
+            
             MemoryStream memoryStream = new MemoryStream(imageByte);
 #if IOS || ANDROID || MACCATALYST
             image = (Microsoft.Maui.Graphics.IImage)PlatformImage.FromStream(memoryStream);
@@ -26,9 +30,18 @@ namespace ShopWorld.MAUI.Services
 #endif
             if (image != null)
             {
-                Microsoft.Maui.Graphics.IImage newImage = image.Resize(300,300,ResizeMode.Fit);
-                byte[] bytes=newImage.AsBytes();
-                return bytes;
+                
+                Microsoft.Maui.Graphics.IImage newImage = image.Downsize(300);
+                
+                
+                byte[] bytes = newImage.AsBytes();
+                SKBitmap bitmap = SKBitmap.Decode(bytes);
+               
+                var surface = new SKCanvas(bitmap);
+                surface.RotateDegrees(90);
+                surface.Save();
+                byte[] moo = bitmap.Bytes;
+                return moo;
             }
             return null;
         }
