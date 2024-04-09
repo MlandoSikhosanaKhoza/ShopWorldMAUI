@@ -5,7 +5,7 @@ VisualStudioVersion = 17.0.31611.283
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ShopWorld.MAUI", "ShopWorld.MAUI\ShopWorld.MAUI.csproj", "{EEE0E97F-313A-46D5-9441-EAD6D77018AB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ShopWorld.Shared", "ShopWorld.Shared\ShopWorld.Shared.csproj", "{E9FFE510-A296-4E43-8290-68A0B8CE9DF8}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ShopWorld.Shared", "ShopWorld.Shared\ShopWorld.Shared.csproj", "{E9FFE510-A296-4E43-8290-68A0B8CE9DF8}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

@@ -183,12 +183,20 @@ namespace ShopWorld.MAUI.Services
 
         public async Task<ObservableCollection<BindItemViewModel>> GetAllBindableItems()
         {
-            List<ItemModel> itemModels = await _itemRepository.GetAsync();
-            ObservableCollection<BindItemViewModel> items= new ObservableCollection<BindItemViewModel>();
-            foreach (ItemModel item in itemModels)
+            ObservableCollection<BindItemViewModel> items = new ObservableCollection<BindItemViewModel>();
+            try
             {
-                items.Add(new BindItemViewModel(item));
+                List<ItemModel> itemModels = await _itemRepository.GetAsync();
+                foreach (ItemModel item in itemModels)
+                {
+                    items.Add(new BindItemViewModel(item));
+                }
             }
+            catch (Exception e)
+            {
+
+            }
+            
             return items;
         }
 

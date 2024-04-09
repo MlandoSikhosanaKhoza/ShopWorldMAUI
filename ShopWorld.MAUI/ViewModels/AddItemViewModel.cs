@@ -11,7 +11,6 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using ZXing;
 using CommunityToolkit.Mvvm.Input;
 using SkiaSharp;
 using static SQLite.SQLite3;
