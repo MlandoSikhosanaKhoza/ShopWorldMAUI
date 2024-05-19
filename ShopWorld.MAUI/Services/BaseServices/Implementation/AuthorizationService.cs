@@ -20,11 +20,11 @@ namespace ShopWorld.MAUI.Services
         /* Initialize: Wipe customer data from admin */
         private IGenericRepository<CustomerModel> _customerRepository;
         public AuthorizationService(IUnitOfWork unitOfWork) { 
-            _cartRepository = unitOfWork.GetRepository<CartModel>();
-            _customerRepository = unitOfWork.GetRepository<CustomerModel>();
-            _orderRepository = unitOfWork.GetRepository<OrderModel>();
+            _cartRepository      = unitOfWork.GetRepository<CartModel>();
+            _customerRepository  = unitOfWork.GetRepository<CustomerModel>();
+            _orderRepository     = unitOfWork.GetRepository<OrderModel>();
             _orderItemRepository = unitOfWork.GetRepository<OrderItemModel>();
-            _itemRepository = unitOfWork.GetRepository<ItemModel>();
+            _itemRepository      = unitOfWork.GetRepository<ItemModel>();
         }
         private string Token { get; set; }
         public async Task SetLoginToken(string Token)

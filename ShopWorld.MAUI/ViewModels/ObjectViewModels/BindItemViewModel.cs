@@ -19,7 +19,7 @@ namespace ShopWorld.MAUI.ViewModels
     public partial class BindItemViewModel:ObservableObject
     {
         public BindItemViewModel(ItemModel item) { 
-            _item= item;
+            _item = item;
             price = item.Price.ToString("0.00");
             ImageDisplaySource = item.ImageName;
             DescriptionCheck.Validations.Add(new IsNotNullOrEmptyRule<string>() { ValidationMessage="Required * "});
@@ -28,6 +28,11 @@ namespace ShopWorld.MAUI.ViewModels
         private ItemModel _item;
         private byte[] imageToUpload { get; set; } = null;
 
+
+        public ItemModel GetItemModel()
+        {
+            return _item;
+        }
         [ObservableProperty]
         private ImageSource imageDisplaySource;
 
@@ -58,31 +63,39 @@ namespace ShopWorld.MAUI.ViewModels
             }
         }
         [ObservableProperty]
-        private ValidatableObject<string> priceCheck=new ValidatableObject<string>();
+        private ValidatableObject<string> priceCheck = new ValidatableObject<string>();
 
-        private void ForceAutoFocus()
-        {
+        public bool ImageIsDownloaded { get => !ImageName.EndsWith("image_not_found.png"); }
 
-        }
+        [ObservableProperty]
+        private bool downloadInProgress = false;
 
         [RelayCommand]
-        private async void TakePhoto()
+        private async Task TakePhoto()
         {
-            FileResult result = await MediaPicker.Default.CapturePhotoAsync();
-            
-            Stream stream = await result.OpenReadAsync();
+            try
+            {
+                FileResult result = await MediaPicker.Default.CapturePhotoAsync();
 
-            SKImage image=SKImage.FromEncodedData(stream);
-            int maxDimension = 300;
-            double newHeight = image.Height >= image.Width ? maxDimension : (((double)image.Height / (double)image.Width) * maxDimension);
-            double newWidth = image.Width >= image.Height ? maxDimension : (((double)image.Width / (double)image.Height) * maxDimension);
-            SKBitmap bitmap=SKBitmap.FromImage(image);
-            bitmap=bitmap.Resize(new SKImageInfo { AlphaType = SKAlphaType.Opaque, ColorType = SKColorType.RgbaF16, Height = (int)newHeight, Width = (int)newWidth }, SKFilterQuality.High);
-            image=SKImage.FromBitmap(bitmap);
-            SKData data = image.Encode(SKEncodedImageFormat.Jpeg,100);
-            imageToUpload = data.ToArray();
-            stream = new MemoryStream(imageToUpload);
-            ImageDisplaySource =ImageSource.FromStream(()=>stream);
+                Stream stream = await result.OpenReadAsync();
+
+                SKImage image = SKImage.FromEncodedData(stream);
+                int maxDimension = 300;
+                double newHeight = image.Height >= image.Width ? maxDimension : (((double)image.Height / (double)image.Width) * maxDimension);
+                double newWidth = image.Width >= image.Height ? maxDimension : (((double)image.Width / (double)image.Height) * maxDimension);
+                SKBitmap bitmap = SKBitmap.FromImage(image);
+                bitmap = bitmap.Resize(new SKImageInfo { AlphaType = SKAlphaType.Opaque, ColorType = SKColorType.RgbaF16, Height = (int)newHeight, Width = (int)newWidth }, SKFilterQuality.High);
+                image = SKImage.FromBitmap(bitmap);
+                SKData data = image.Encode(SKEncodedImageFormat.Jpeg, 100);
+                imageToUpload = data.ToArray();
+                stream = new MemoryStream(imageToUpload);
+                ImageDisplaySource = ImageSource.FromStream(() => stream);
+            }
+            catch (Exception e)
+            {
+                
+            }
+            
         }
 
         [RelayCommand]

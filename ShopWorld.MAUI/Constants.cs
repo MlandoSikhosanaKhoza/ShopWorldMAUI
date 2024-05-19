@@ -9,9 +9,9 @@ namespace ShopWorld.MAUI
     public class Constants
     {
         public const string DatabaseFilename = "ShopWorld.db3";
-        public static string ShopWorldApiUrl = "https://shopworldapi.vamisa.co.za";
+        public static string ShopWorldApiUrl = "https://shopworldapi.thetalkzulu.co.za";
         public const SQLite.SQLiteOpenFlags Flags = SQLite.SQLiteOpenFlags.ReadWrite | SQLite.SQLiteOpenFlags.Create | SQLite.SQLiteOpenFlags.SharedCache;
-        public static string DatabasePath => Path.Combine(FileSystem.AppDataDirectory, DatabaseFilename);
+        public static string DatabasePath => Path.Combine("C:\\CSPROJ", DatabaseFilename);
         public static string ImageDirectory => $"{FileSystem.AppDataDirectory}/Images/";
         public static string GenerateImageUrl(string ImageName)
         {

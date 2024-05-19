@@ -30,32 +30,37 @@ namespace ShopWorld.MAUI.ViewModels
         public StartUpViewModel(IAuthorizationService authorizationService, IUserManagementService userManagementService,
             INavigationService navigationService,IItemService itemService,ISettingsService settingsService,
             IOrderItemService orderItemService,ShopWorldClient shopWorldClient) { 
-            _authorizationService = authorizationService;
-            _navigationService = navigationService;
-            _itemService = itemService;
-            _orderItemService = orderItemService;
-            _settingsService = settingsService;
+            _authorizationService  = authorizationService;
+            _navigationService     = navigationService;
+            _itemService           = itemService;
+            _orderItemService      = orderItemService;
+            _settingsService       = settingsService;
             _userManagementService = userManagementService;
-            _shopWorldClient = shopWorldClient;
+            _shopWorldClient       = shopWorldClient;
         }
         [ObservableProperty]
-        private bool mustDisplayLoginButtons=false;
+        private bool mustDisplayLoginButtons = false;
+
+
 
         [RelayCommand]
-        private async void LoginAsUser()
+        private async Task LoginAsUser()
         {
             await _navigationService.NavigateToAsync($"//{nameof(LoginPage)}");
         }
 
         [RelayCommand]
-        private async void LoginAsAdmin()
+        private async Task LoginAsAdmin()
         {
+            IsBusy = true;
             LoginResult loginResult = await _userManagementService.LoginAsAdmin();
             /* Read JWT Token for Full name*/
             _settingsService.SetFullName(JwtTokenReader.GetTokenValue(loginResult.JwtToken, ClaimTypes.Name));
             await _itemService.ReSynchronizeItemsAsync();
             /* Go to the Shopping Page*/
+            IsBusy = false;
             await _navigationService.NavigateToAsync($"//{nameof(ItemPage)}");
+            
         }
 
         public async void OnAppearing()
@@ -64,11 +69,12 @@ namespace ShopWorld.MAUI.ViewModels
             {
                 return;
             }
-            IsBusy = true;
+            IsBusy                  = true;
             MustDisplayLoginButtons = false;
 
             /* Check secure storage for JWT Token and store it in a string */
             await _authorizationService.ProcessTokenAsync();
+            await Task.Delay(3000);
             if (_authorizationService.IsValidToken())
             {
                 _shopWorldClient.AuthorizeClient();

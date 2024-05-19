@@ -30,6 +30,7 @@ namespace ShopWorld.MAUI.ViewModels
             MainThread.InvokeOnMainThreadAsync(async () =>
             {
                 Items = await itemService.GetAllBindableItems();
+                ExecuteImageDownload();
             });
 
             StrongReferenceMessenger.Default.Register<SaveItemMessage>(this, async (recipient, message) =>
@@ -82,11 +83,40 @@ namespace ShopWorld.MAUI.ViewModels
             await _navigationService.NavigateToAsync(nameof(AddItemPage));
         }
 
+        private void ExecuteImageDownload()
+        {
+            MainThread.BeginInvokeOnMainThread(async () => {
+                foreach (BindItemViewModel item in Items)
+                {
+                    if (!item.ImageIsDownloaded)
+                    {
+                        item.DownloadInProgress = true;
+                        for (int i = 0; i < 3; i++)
+                        {
+                            //String is imageName and value is if it downloaded
+                            KeyValuePair<string, bool> imageDownload = await _itemService.DownloadImageForItemAsync(item.GetItemModel());
+                            bool isDownloaded                        = imageDownload.Value;
+
+                            if (isDownloaded)
+                            {
+                                item.ImageName          = imageDownload.Key;
+                                item.ImageDisplaySource = imageDownload.Key;
+                                break;
+                            }
+                        }
+                        item.DownloadInProgress = false;
+                    }
+                    await Task.Delay(200);
+                }
+            });
+        }
+
         public async Task OnAppearing()
         {
             if (Refresh)
             {
                 Items = await _itemService.GetAllBindableItems();
+                ExecuteImageDownload();
                 Refresh = false;
             }
         }

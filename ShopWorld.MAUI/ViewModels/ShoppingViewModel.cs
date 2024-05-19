@@ -57,7 +57,7 @@ namespace ShopWorld.MAUI.ViewModels
             });
         }
         [ObservableProperty]
-        private ObservableCollection<ItemModel> items;
+        private ObservableCollection<BindItemViewModel> items;
         [ObservableProperty]
         private ObservableCollection<CartModel> myOrderItems = new ObservableCollection<CartModel>();
         [ObservableProperty]
@@ -78,7 +78,7 @@ namespace ShopWorld.MAUI.ViewModels
             IsBusy = true;
             IsLoadingItems = true;
             await _itemService.ReSynchronizeItemsAsync();
-            Items=new ObservableCollection<ItemModel>(await _itemService.GetAllItemsAsync());
+            Items=new ObservableCollection<BindItemViewModel>(await _itemService.GetAllBindableItems());
             IsLoadingItems=false;
             IsBusy = false;
         }
@@ -92,14 +92,14 @@ namespace ShopWorld.MAUI.ViewModels
         }
 
         [RelayCommand]
-        private async void PurchaseItem(ItemModel ItemObject)
+        private async void PurchaseItem(BindItemViewModel ItemObject)
         {
             if (IsBusy)
             {
                 return;
             }
             IsBusy = true;
-            CartModel addedCartItem = await _cartService.AddItemToCartAsync(ItemObject);
+            CartModel addedCartItem = await _cartService.AddItemToCartAsync(ItemObject.GetItemModel());
             if (MyOrderItems.Any(c => c.ItemId == addedCartItem.ItemId))
             {
                 CartModel cartModelToUpdate = MyOrderItems.FirstOrDefault(c => c.ItemId == ItemObject.ItemId);
@@ -117,15 +117,40 @@ namespace ShopWorld.MAUI.ViewModels
             IsBusy = false;
         }
 
+        private void ExecuteImageDownload()
+        {
+            MainThread.BeginInvokeOnMainThread(async () => {
+                foreach (BindItemViewModel item in Items)
+                {
+                    if (!item.ImageIsDownloaded)
+                    {
+                        item.DownloadInProgress = true;
+                        for (int i = 0; i < 3; i++)
+                        {
+                            //String is imageName and value is if it downloaded
+                            KeyValuePair<string, bool> imageDownload = await _itemService.DownloadImageForItemAsync(item.GetItemModel());
+                            bool isDownloaded = imageDownload.Value;
+
+                            if (isDownloaded)
+                            {
+                                item.ImageName = imageDownload.Key;
+                                item.ImageDisplaySource = imageDownload.Key;
+                                break;
+                            }
+                        }
+                        item.DownloadInProgress = false;
+                    }
+                    await Task.Delay(200);
+                }
+            });
+        }
+
         public async void OnAppearingAsync()
         {
-            if (IsBusy)
-            {
-                return;
-            }
             IsBusy = true;
             if(Items==null) {
-                Items = new ObservableCollection<ItemModel>(await _itemService.GetAllItemsAsync());
+                Items = new ObservableCollection<BindItemViewModel>(await _itemService.GetAllBindableItems());
+                ExecuteImageDownload();
             }
             if((await _cartService.CountAsync())>0  && !HasAccessedPage)
             {

@@ -20,7 +20,15 @@ namespace ShopWorld.MAUI.Repository
             {
                 return await _database.Table<T>().Where(filter).ToListAsync();
             }
-            return await _database.Table<T>().ToListAsync();
+            try
+            {
+                return await _database.Table<T>().ToListAsync();
+            }
+            catch (Exception)
+            {
+                return new List<T>();
+            }
+            
         }
 
         public Task<int> InsertAsync(T entity)
