@@ -103,7 +103,7 @@ namespace ShopWorld.MAUI.Services
         {
             try
             {
-                Item item=await _shopWorldClient.Item_GetItemAsync(bindItemViewModel.ItemId);
+                Item item = await _shopWorldClient.Item_GetItemAsync(bindItemViewModel.ItemId);
                 string base64 = await _shopWorldClient.Item_GetBase64ImageForImageNameAsync(item.ImageName);
                 byte[] image = Convert.FromBase64String(base64);
                 if (!System.IO.Directory.Exists(Constants.ImageDirectory))

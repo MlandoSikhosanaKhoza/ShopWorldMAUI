@@ -21,12 +21,12 @@
                                 <Label VerticalOptions="Center" Grid.Column="0" Text="{Binding ItemName}"/>
                                 <Label VerticalOptions="Center" Grid.Column="1" Text="{Binding Quantity}"/>
                                 <Label VerticalOptions="Center" Grid.Column="2" Text="{Binding Price,StringFormat='R {0:F2}'}"/>
-                                <ImageButton IsEnabled="{Binding Source={RelativeSource AncestorType={x:Type viewModels:ShoppingCartViewModel}},Path=IsNotBusy}" Grid.Column="3" Command="{Binding IncreaseQuantityCommand}">
+                                <ImageButton IsVisible="False" IsEnabled="{Binding Source={RelativeSource AncestorType={x:Type viewModels:ShoppingCartViewModel}},Path=IsNotBusy}" Grid.Column="3" Command="{Binding IncreaseQuantityCommand}">
                                     <ImageButton.Source>
                                         <FontImageSource FontFamily="FontAwesome" Color="Black" Glyph="{x:Static model:IconFont.Plus}"/>
                                     </ImageButton.Source>
                                 </ImageButton>
-                                <ImageButton IsEnabled="{Binding Source={RelativeSource AncestorType={x:Type viewModels:ShoppingCartViewModel}},Path=IsNotBusy}" Grid.Column="4" Command="{Binding DecreaseQuantityCommand}">
+                                <ImageButton IsVisible="False" IsEnabled="{Binding Source={RelativeSource AncestorType={x:Type viewModels:ShoppingCartViewModel}},Path=IsNotBusy}" Grid.Column="4" Command="{Binding DecreaseQuantityCommand}">
                                     <ImageButton.Source>
                                         <FontImageSource FontFamily="FontAwesome" Color="Black" Glyph="{x:Static model:IconFont.Minus}"/>
                                     </ImageButton.Source>

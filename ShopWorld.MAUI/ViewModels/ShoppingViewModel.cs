@@ -71,7 +71,10 @@ namespace ShopWorld.MAUI.ViewModels
         [NotifyPropertyChangedFor(nameof(IsNotLoadingItems))]
         private bool isLoadingItems = false;
         [ObservableProperty]
+        [NotifyPropertyChangedFor(nameof(IsNotDownloadingImages))]
         private bool isDownloadingImages = false;
+
+        public bool IsNotDownloadingImages => !IsDownloadingImages;
         [ObservableProperty]
         private bool hasAccessedPage = false;
         public bool IsNotLoadingItems => !IsLoadingItems;
@@ -88,6 +91,7 @@ namespace ShopWorld.MAUI.ViewModels
             IsLoadingItems = true;
             await _itemService.ReSynchronizeItemsAsync();
             Items=new ObservableCollection<BindItemViewModel>(await _itemService.GetAllBindableItems());
+            ExecuteImageDownload();
             IsLoadingItems=false;
             IsBusy = false;
         }

@@ -8,7 +8,7 @@
              Title="Items">
     <Grid RowDefinitions="Auto,*" HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand">
         <VerticalStackLayout Grid.Row="0">
-            <HorizontalStackLayout HorizontalOptions="Center" VerticalOptions="Center">
+            <HorizontalStackLayout IsVisible="{Binding IsNotDownloadingImages}" HorizontalOptions="Center" VerticalOptions="Center">
                 <ImageButton Command="{Binding RefreshItemsCommand}">
                     <ImageButton.Source>
                         <FontImageSource FontFamily="FontAwesome" Glyph="{x:Static model:IconFont.Redo}" Color="Black"/>
