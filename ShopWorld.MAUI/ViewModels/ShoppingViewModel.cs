@@ -20,41 +20,48 @@ namespace ShopWorld.MAUI.ViewModels
         private IItemService _itemService;
         private ICartService _cartService;
         private INavigationService _navigationService;
+        private IConnectivity connectivity;
         public ShoppingViewModel(IItemService itemService,
             ICartService cartService,
-            INavigationService navigationService)
+            INavigationService navigationService,
+            IConnectivity connectivity)
         {
             _itemService = itemService;
             _cartService = cartService;
             _navigationService = navigationService;
-            StrongReferenceMessenger.Default.Register<UpdateCartItemMessage>(this, (recipient, message) => {
+            StrongReferenceMessenger.Default.Register<UpdateCartItemMessage>(this, (recipient, message) =>
+            {
                 MainThread.BeginInvokeOnMainThread(() =>
                 {
                     CartModel item = message.Value;
-                    MyOrderItems.FirstOrDefault(i=>i.CartId==item.CartId).Quantity = item.Quantity;
+                    MyOrderItems.FirstOrDefault(i => i.CartId == item.CartId).Quantity = item.Quantity;
                     OnPropertyChanged(nameof(NumOfWantedItems));
                 });
             });
-            StrongReferenceMessenger.Default.Register<DeleteCartItemMessage>(this, (recipient, message) => {
+            StrongReferenceMessenger.Default.Register<DeleteCartItemMessage>(this, (recipient, message) =>
+            {
                 MainThread.BeginInvokeOnMainThread(() =>
                 {
-                    CartModel cartItemToDelete=MyOrderItems.FirstOrDefault(i=>i.ItemId == message.Value.ItemId);
+                    CartModel cartItemToDelete = MyOrderItems.FirstOrDefault(i => i.ItemId == message.Value.ItemId);
                     if (cartItemToDelete != null)
                     {
                         MyOrderItems.Remove(cartItemToDelete);
                     }
                 });
             });
-            StrongReferenceMessenger.Default.Register<ClearCartMessage>(this, (recipient, message) => {
+            StrongReferenceMessenger.Default.Register<ClearCartMessage>(this, (recipient, message) =>
+            {
                 MyOrderItems.Clear();
             });
-            StrongReferenceMessenger.Default.Register<LogoutMessage>(this, (recipient, message) => {
+            StrongReferenceMessenger.Default.Register<LogoutMessage>(this, (recipient, message) =>
+            {
                 MainThread.BeginInvokeOnMainThread(() =>
                 {
                     MyOrderItems = new ObservableCollection<CartModel>();
                     HasAccessedPage = false;
                 });
             });
+            this.connectivity = connectivity;
         }
         [ObservableProperty]
         private ObservableCollection<BindItemViewModel> items;
@@ -63,6 +70,8 @@ namespace ShopWorld.MAUI.ViewModels
         [ObservableProperty]
         [NotifyPropertyChangedFor(nameof(IsNotLoadingItems))]
         private bool isLoadingItems = false;
+        [ObservableProperty]
+        private bool isDownloadingImages = false;
         [ObservableProperty]
         private bool hasAccessedPage = false;
         public bool IsNotLoadingItems => !IsLoadingItems;
@@ -120,28 +129,41 @@ namespace ShopWorld.MAUI.ViewModels
         private void ExecuteImageDownload()
         {
             MainThread.BeginInvokeOnMainThread(async () => {
+                IsDownloadingImages = true;
                 foreach (BindItemViewModel item in Items)
                 {
                     if (!item.ImageIsDownloaded)
                     {
-                        item.DownloadInProgress = true;
-                        for (int i = 0; i < 3; i++)
+                        if (connectivity.NetworkAccess == NetworkAccess.Internet)
                         {
-                            //String is imageName and value is if it downloaded
-                            KeyValuePair<string, bool> imageDownload = await _itemService.DownloadImageForItemAsync(item.GetItemModel());
-                            bool isDownloaded = imageDownload.Value;
-
-                            if (isDownloaded)
+                            item.DownloadInProgress = true;
+                            for (int i = 0; i < 3; i++)
                             {
-                                item.ImageName = imageDownload.Key;
-                                item.ImageDisplaySource = imageDownload.Key;
-                                break;
+                                //String is imageName and value is if it downloaded
+                                KeyValuePair<string, bool> imageDownload = await _itemService.DownloadImageForItemAsync(item.GetItemModel());
+                                bool isDownloaded = imageDownload.Value;
+
+                                if (isDownloaded)
+                                {
+                                    item.ImageName = imageDownload.Key;
+                                    item.ImageDisplaySource = imageDownload.Key;
+                                    break;
+                                }
+                                else
+                                {
+                                    item.IsFailedDownload = true;
+                                }
                             }
+                            item.DownloadInProgress = false;
                         }
-                        item.DownloadInProgress = false;
+                        else
+                        {
+                            item.IsFailedDownload = true;
+                        }
                     }
                     await Task.Delay(200);
                 }
+                IsDownloadingImages = false;
             });
         }
 

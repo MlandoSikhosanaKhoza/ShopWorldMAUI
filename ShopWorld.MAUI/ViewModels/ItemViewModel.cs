@@ -1,6 +1,7 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
+using Microsoft.Maui.Networking;
 using ShopWorld.MAUI.Messages;
 using ShopWorld.MAUI.Services;
 using ShopWorld.MAUI.Views;
@@ -23,8 +24,9 @@ namespace ShopWorld.MAUI.ViewModels
         private readonly IItemService _itemService;
         private readonly IImageService _imageService;
         private readonly INavigationService _navigationService;
+        private readonly IConnectivity _connectivity;
 
-        public ItemViewModel(IItemService itemService, INavigationService navigationService, IImageService imageService)
+        public ItemViewModel(IItemService itemService, INavigationService navigationService, IImageService imageService, IConnectivity connectivity)
         {
             _itemService = itemService;
             MainThread.InvokeOnMainThreadAsync(async () =>
@@ -72,10 +74,14 @@ namespace ShopWorld.MAUI.ViewModels
             });
             _navigationService = navigationService;
             _imageService = imageService;
+            _connectivity = connectivity;
         }
 
         [ObservableProperty]
         private ObservableCollection<BindItemViewModel> items = new ObservableCollection<BindItemViewModel>();
+
+        [ObservableProperty]
+        private bool isDownloadingImages = false;
 
         [RelayCommand]
         private async void GoToAdd()
@@ -86,28 +92,41 @@ namespace ShopWorld.MAUI.ViewModels
         private void ExecuteImageDownload()
         {
             MainThread.BeginInvokeOnMainThread(async () => {
+                IsDownloadingImages = true;
                 foreach (BindItemViewModel item in Items)
                 {
                     if (!item.ImageIsDownloaded)
                     {
-                        item.DownloadInProgress = true;
-                        for (int i = 0; i < 3; i++)
+                        if (_connectivity.NetworkAccess == NetworkAccess.Internet)
                         {
-                            //String is imageName and value is if it downloaded
-                            KeyValuePair<string, bool> imageDownload = await _itemService.DownloadImageForItemAsync(item.GetItemModel());
-                            bool isDownloaded                        = imageDownload.Value;
-
-                            if (isDownloaded)
+                            item.DownloadInProgress = true;
+                            for (int i = 0; i < 3; i++)
                             {
-                                item.ImageName          = imageDownload.Key;
-                                item.ImageDisplaySource = imageDownload.Key;
-                                break;
+                                //String is imageName and value is if it downloaded
+                                KeyValuePair<string, bool> imageDownload = await _itemService.DownloadImageForItemAsync(item.GetItemModel());
+                                bool isDownloaded = imageDownload.Value;
+
+                                if (isDownloaded)
+                                {
+                                    item.ImageName = imageDownload.Key;
+                                    item.ImageDisplaySource = imageDownload.Key;
+                                    break;
+                                }
+                                else
+                                {
+                                    item.IsFailedDownload = true;
+                                }
                             }
+                            item.DownloadInProgress = false;
                         }
-                        item.DownloadInProgress = false;
+                        else
+                        {
+                            item.IsFailedDownload = true;
+                        }
                     }
                     await Task.Delay(200);
                 }
+                IsDownloadingImages = false;
             });
         }
 

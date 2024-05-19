@@ -11,8 +11,8 @@ namespace ShopWorld.MAUI
         public const string DatabaseFilename = "ShopWorld.db3";
         public static string ShopWorldApiUrl = "https://shopworldapi.thetalkzulu.co.za";
         public const SQLite.SQLiteOpenFlags Flags = SQLite.SQLiteOpenFlags.ReadWrite | SQLite.SQLiteOpenFlags.Create | SQLite.SQLiteOpenFlags.SharedCache;
-        public static string DatabasePath => Path.Combine("C:\\CSPROJ", DatabaseFilename);
-        public static string ImageDirectory => $"{FileSystem.AppDataDirectory}/Images/";
+        public static string DatabasePath => Path.Combine(FileSystem.AppDataDirectory, DatabaseFilename);
+        public static string ImageDirectory => $"{FileSystem.AppDataDirectory}/Image/";
         public static string GenerateImageUrl(string ImageName)
         {
             return $"{ImageDirectory}{ImageName}";

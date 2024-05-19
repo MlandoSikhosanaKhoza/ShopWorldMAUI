@@ -86,6 +86,11 @@ namespace ShopWorld.MAUI.ViewModels
             IsBusy = false;
         }
         
+        private void IncreaseQuantity()
+        {
+
+        }
+
         private void CalculateTotals()
         {
             TotalBeforeTax = MyOrderItems.Sum(oi => oi.Price * oi.Quantity);

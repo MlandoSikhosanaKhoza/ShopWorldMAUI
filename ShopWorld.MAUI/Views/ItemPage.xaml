@@ -26,11 +26,22 @@
                         <DataTemplate x:DataType="viewModels:BindItemViewModel">
                             <Frame Margin="8" WidthRequest="300" HeightRequest="400">
                                 <Grid RowDefinitions="Auto,Auto,Auto,Auto">
-                                    <Image Grid.Row="0" Source="{Binding ImageDisplaySource}" MaximumHeightRequest="150" MaximumWidthRequest="280" Margin="4" >
-                                        <Image.GestureRecognizers>
-                                            <TapGestureRecognizer NumberOfTapsRequired="2" Command="{Binding TakePhotoCommand}"/>
-                                        </Image.GestureRecognizers>
-                                    </Image>
+                                    <Grid HeightRequest="200" HorizontalOptions="CenterAndExpand">
+                                        <VerticalStackLayout VerticalOptions="CenterAndExpand" HorizontalOptions="CenterAndExpand">
+                                            <Image Grid.Row="0" Source="{Binding ImageDisplaySource}" MaximumHeightRequest="150" MaximumWidthRequest="280" Margin="4" >
+                                                <Image.GestureRecognizers>
+                                                    <TapGestureRecognizer NumberOfTapsRequired="2" Command="{Binding TakePhotoCommand}"/>
+                                                </Image.GestureRecognizers>
+                                            </Image>
+                                        </VerticalStackLayout>
+                                        <VerticalStackLayout VerticalOptions="CenterAndExpand" HorizontalOptions="CenterAndExpand">
+                                            <ActivityIndicator IsVisible="{Binding DownloadInProgress}" IsRunning="{Binding DownloadInProgress}"/>
+                                        </VerticalStackLayout>
+                                        <VerticalStackLayout IsVisible="{Binding IsFailedDownload}" VerticalOptions="EndAndExpand" HorizontalOptions="CenterAndExpand">
+                                            <Label TextColor="Red" HorizontalTextAlignment="Center" Text="There seems to be an issue downloading your image" Margin="0,0,0,24"/>
+                                        </VerticalStackLayout>
+                                    </Grid>
+                                    
                                     <VerticalStackLayout Grid.Row="1">
                                         <Entry Text="{Binding Description}" Margin="4" FontSize="Medium"  />
                                         <VerticalStackLayout BindableLayout.ItemsSource="{Binding DescriptionCheck.Errors}">

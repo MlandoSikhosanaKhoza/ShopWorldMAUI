@@ -56,7 +56,7 @@ namespace ShopWorld.MAUI.ViewModels
             LoginResult loginResult = await _userManagementService.LoginAsAdmin();
             /* Read JWT Token for Full name*/
             _settingsService.SetFullName(JwtTokenReader.GetTokenValue(loginResult.JwtToken, ClaimTypes.Name));
-            await _itemService.ReSynchronizeItemsAsync();
+            await _itemService.CheckAndDownload();
             /* Go to the Shopping Page*/
             IsBusy = false;
             await _navigationService.NavigateToAsync($"//{nameof(ItemPage)}");

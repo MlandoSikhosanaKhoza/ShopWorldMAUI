@@ -106,6 +106,11 @@ namespace ShopWorld.MAUI.Services
                 Item item=await _shopWorldClient.Item_GetItemAsync(bindItemViewModel.ItemId);
                 string base64 = await _shopWorldClient.Item_GetBase64ImageForImageNameAsync(item.ImageName);
                 byte[] image = Convert.FromBase64String(base64);
+                if (!System.IO.Directory.Exists(Constants.ImageDirectory))
+                {
+                    System.IO.Directory.CreateDirectory(Constants.ImageDirectory);
+                }
+                string filepath = Constants.GenerateImageUrl(item.ImageName);
                 FileStream fileStream = new FileStream(Constants.GenerateImageUrl(item.ImageName), FileMode.Create);
                 fileStream.Write(image, 0, image.Length);
                 fileStream.Close();
@@ -115,6 +120,9 @@ namespace ShopWorld.MAUI.Services
                 return new KeyValuePair<string, bool>(model.ImageName,true);
             }
             catch (ApiException ex)
+            {
+                return new KeyValuePair<string, bool>("", false);
+            } catch (Exception ex)
             {
                 return new KeyValuePair<string, bool>("", false);
             }
@@ -130,12 +138,12 @@ namespace ShopWorld.MAUI.Services
                     string url = "image_not_found.png";
                     await _itemRepository.InsertAsync(new ItemModel
                     {
-                        ItemId = item.ItemId,
-                        ImageName = url,
+                        ItemId      = item.ItemId,
+                        ImageName   = url,
                         Description = item.Description,
-                        Price = item.Price,
-                        IsDeleted = item.IsDeleted,
-                        DateSynced = DateTime.UtcNow
+                        Price       = item.Price,
+                        IsDeleted   = item.IsDeleted,
+                        DateSynced  = DateTime.UtcNow
                     });
                 }
                 return true;

@@ -68,6 +68,9 @@ namespace ShopWorld.MAUI.ViewModels
         public bool ImageIsDownloaded { get => !ImageName.EndsWith("image_not_found.png"); }
 
         [ObservableProperty]
+        private bool isFailedDownload = false;
+
+        [ObservableProperty]
         private bool downloadInProgress = false;
 
         [RelayCommand]
