@@ -90,6 +90,7 @@ namespace ShopWorld.MAUI.Services
                     }
                     itemToUpdate.Description = item.Description;
                     itemToUpdate.Price = item.Price;
+                    await _itemRepository.UpdateAsync(itemToUpdate);
                 }
                 return isUpdated;
             }
@@ -132,6 +133,7 @@ namespace ShopWorld.MAUI.Services
         {
             try
             {
+                await _itemRepository.DeleteAllAsync();
                 List<Item> items = (List<Item>)await _shopWorldClient.Item_GetAllItemsAsync();
                 foreach (Item item in items)
                 {

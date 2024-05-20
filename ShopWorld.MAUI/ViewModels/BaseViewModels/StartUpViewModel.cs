@@ -59,7 +59,9 @@ namespace ShopWorld.MAUI.ViewModels
             await _itemService.CheckAndDownload();
             /* Go to the Shopping Page*/
             IsBusy = false;
-            await _navigationService.NavigateToAsync($"//{nameof(ItemPage)}");
+            Dictionary<string,object> parameters = new Dictionary<string, object>();
+            parameters.Add("Refresh", true);
+            await _navigationService.NavigateToAsync($"//{nameof(ItemPage)}",parameters);
             
         }
 

@@ -66,6 +66,14 @@ namespace ShopWorld.MAUI.Services
             await _customerRepository.DeleteAllAsync();
             await _orderRepository.DeleteAllAsync();
             await _orderItemRepository.DeleteAllAsync();
+            //Take into consideration the accumulated images
+            IEnumerable<ItemModel> items = await _itemRepository.GetAsync();
+            foreach (ItemModel item in items) {
+                if (!item.ImageName.EndsWith("image_not_found.png"))
+                {
+                    System.IO.File.Delete(item.ImageName);
+                }
+            }
             await _itemRepository.DeleteAllAsync();
         }
 
