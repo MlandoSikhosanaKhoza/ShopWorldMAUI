@@ -1,10 +1,12 @@
-﻿using CommunityToolkit.Mvvm.ComponentModel;
+﻿using CommunityToolkit.Maui.Views;
+using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
 using ShopWorld.MAUI.Messages;
 using ShopWorld.MAUI.Models;
 using ShopWorld.MAUI.Skia;
 using ShopWorld.MAUI.Validation;
+using ShopWorld.MAUI.Views.Modal;
 using ShopWorld.Shared.Entities;
 using SkiaSharp;
 using System;
@@ -78,21 +80,15 @@ namespace ShopWorld.MAUI.ViewModels
         {
             try
             {
-                FileResult result = await MediaPicker.Default.CapturePhotoAsync();
-
-                Stream stream = await result.OpenReadAsync();
-
-                SKImage image = SKImage.FromEncodedData(stream);
-                int maxDimension = 300;
-                double newHeight = image.Height >= image.Width ? maxDimension : (((double)image.Height / (double)image.Width) * maxDimension);
-                double newWidth = image.Width >= image.Height ? maxDimension : (((double)image.Width / (double)image.Height) * maxDimension);
-                SKBitmap bitmap = SKBitmap.FromImage(image);
-                bitmap = bitmap.Resize(new SKImageInfo { AlphaType = SKAlphaType.Opaque, ColorType = SKColorType.RgbaF16, Height = (int)newHeight, Width = (int)newWidth }, SKFilterQuality.High);
-                image = SKImage.FromBitmap(bitmap);
-                SKData data = image.Encode(SKEncodedImageFormat.Jpeg, 100);
-                imageToUpload = data.ToArray();
-                stream = new MemoryStream(imageToUpload);
-                ImageDisplaySource = ImageSource.FromStream(() => stream);
+                CameraItemPopup popup = new CameraItemPopup(new CameraItemPopupViewModel());
+                object? imageResult = await Shell.Current.ShowPopupAsync(popup);
+                
+                if(imageResult is byte[] imageByte)
+                {
+                    imageToUpload       = imageByte;
+                    MemoryStream stream = new MemoryStream(imageToUpload);
+                    ImageDisplaySource  = ImageSource.FromStream(() => stream);
+                }
             }
             catch (Exception e)
             {

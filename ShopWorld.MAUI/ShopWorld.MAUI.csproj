@@ -73,7 +73,6 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <Folder Include="Views\Modal\" />
 	  <Folder Include="Views\Templates\" />
 	</ItemGroup>
 
@@ -82,6 +81,9 @@
 	</ItemGroup>
 
 	<ItemGroup>
+	  <Compile Update="Views\Modal\CameraItemPopup.xaml.cs">
+	    <DependentUpon>CameraItemPopup.xaml</DependentUpon>
+	  </Compile>
 	  <Compile Update="Views\ShoppingCartPage.xaml.cs">
 	    <DependentUpon>ShoppingCartPage.xaml</DependentUpon>
 	  </Compile>
@@ -98,6 +100,9 @@
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
 	  <MauiXaml Update="Views\LoginPage.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
+	  <MauiXaml Update="Views\Modal\CameraItemPopup.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
 	  <MauiXaml Update="Views\ReceiptDetailPage.xaml">

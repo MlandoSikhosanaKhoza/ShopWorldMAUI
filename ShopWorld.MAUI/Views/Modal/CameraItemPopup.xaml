@@ -1,0 +1,23 @@
+<toolkit:Popup xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+               xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+               xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+               xmlns:cv="clr-namespace:Camera.MAUI;assembly=Camera.MAUI"
+               xmlns:viewModel="clr-namespace:ShopWorld.MAUI.ViewModels"
+               x:DataType="viewModel:CameraItemPopupViewModel"
+               x:Class="ShopWorld.MAUI.Views.Modal.CameraItemPopup">
+    <Grid RowDefinitions="*,*"  WidthRequest="300" HeightRequest="300">
+
+        <cv:CameraView x:Name="CameraDisplay" IsVisible="{Binding IsVisibleCameraView}" CamerasLoaded="CameraDisplay_CamerasLoaded" VerticalOptions="FillAndExpand" HorizontalOptions="FillAndExpand">
+            <cv:CameraView.GestureRecognizers>
+                <TapGestureRecognizer NumberOfTapsRequired="2" Command="{Binding ForceAutoFocusCommand}"/>
+            </cv:CameraView.GestureRecognizers>
+        </cv:CameraView>
+        <Image IsVisible="{Binding IsVisibleSnapShot}" Source="{Binding SnapShotSource}" VerticalOptions="FillAndExpand" HorizontalOptions="FillAndExpand"/>
+        <Grid Grid.Row="1" ColumnDefinitions="Auto,*" RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto,Auto">
+            <Button Text="Take Photo" Command="{Binding TakePhotoCommand}" Grid.ColumnSpan="2" Margin="4" Grid.Row="0" IsVisible="{Binding IsVisibleCameraView}" IsEnabled="{Binding IsNotBusy}"/>
+            <Button Text="Try again" Command="{Binding TakePhotoCommand}" Grid.ColumnSpan="2" Margin="4" Grid.Row="0" IsVisible="{Binding IsVisibleSnapShot}" IsEnabled="{Binding IsNotBusy}"/>
+            <Button Text="Continue" Command="{Binding ContinueCommand}" Grid.ColumnSpan="2" Margin="4" Grid.Row="1" IsVisible="{Binding IsVisibleSnapShot}" IsEnabled="{Binding IsNotBusy}"/>
+        </Grid>
+        <ActivityIndicator IsRunning="{Binding IsBusy}" IsVisible="{Binding IsBusy}" VerticalOptions="FillAndExpand" Grid.RowSpan="2" HorizontalOptions="FillAndExpand"/>
+    </Grid>
+</toolkit:Popup>

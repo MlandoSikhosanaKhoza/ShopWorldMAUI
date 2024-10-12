@@ -5,7 +5,7 @@
              xmlns:cv="clr-namespace:Camera.MAUI;assembly=Camera.MAUI"
              xmlns:viewModel="clr-namespace:ShopWorld.MAUI.ViewModels"
              x:DataType="viewModel:AddItemViewModel"
-             Title="AddItemPage">
+             Title="AddItemPage" >
     <Grid RowDefinitions="*,*">
        
         <cv:CameraView x:Name="CameraDisplay" IsVisible="{Binding IsVisibleCameraView}" CamerasLoaded="CameraDisplay_CamerasLoaded" VerticalOptions="FillAndExpand" HorizontalOptions="FillAndExpand">

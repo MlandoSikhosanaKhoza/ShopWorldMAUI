@@ -6,6 +6,7 @@ using ShopWorld.MAUI.Services;
 using ShopWorld.MAUI.Swagger;
 using ShopWorld.MAUI.ViewModels;
 using ShopWorld.MAUI.Views;
+using ShopWorld.MAUI.Views.Modal;
 
 namespace ShopWorld.MAUI;
 
@@ -63,6 +64,10 @@ public static class MauiProgram
         builder.Services.AddSingleton<SettingsPage>();
         #endregion Views
 
+        #region Popups
+        builder.Services.AddTransient<CameraItemPopup>();
+        #endregion Popups
+
         #region ViewModels
         builder.Services.AddSingleton<SettingsViewModel>();
         builder.Services.AddSingleton<StartUpViewModel>();
@@ -76,6 +81,7 @@ public static class MauiProgram
         builder.Services.AddSingleton<ReceiptViewModel>();
         builder.Services.AddTransient<ReceiptDetailViewModel>();
         builder.Services.AddTransient<AddItemViewModel>();
+        builder.Services.AddTransient<CameraItemPopupViewModel>();
         #endregion ViewModels
 
         #region Clients
