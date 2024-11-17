@@ -24,7 +24,7 @@ namespace ShopWorld.MAUI.ViewModels
             _item = item;
             price = item.Price.ToString("0.00");
             ImageDisplaySource = item.ImageName;
-            DescriptionCheck.Validations.Add(new IsNotNullOrEmptyRule<string>() { ValidationMessage="Required * "});
+            DescriptionCheck.Validations.Add(new IsNotNullOrEmptyRule<string>() { ValidationMessage = "Required * "});
             PriceCheck.Validations.Add(new StringPriceValid<string>() { ValidationMessage="Must be number of 2 decimal places"});
         }
         private ItemModel _item;
@@ -101,7 +101,7 @@ namespace ShopWorld.MAUI.ViewModels
         private void Save()
         {
             bool isValidDescription = DescriptionCheck.Validate();
-            bool isValidPriceCheck=PriceCheck.Validate();
+            bool isValidPriceCheck = PriceCheck.Validate();
             if (isValidDescription && isValidPriceCheck)
             {
                 _item.Description = Description;
@@ -109,12 +109,12 @@ namespace ShopWorld.MAUI.ViewModels
 
                 StrongReferenceMessenger.Default.Send<SaveItemMessage>(new SaveItemMessage(
                     new Shared.ItemInputModel { 
-                        ItemId = _item.ItemId,
-                        ImageName=_item.ImageName,
-                        Base64=imageToUpload==null?null:Convert.ToBase64String(imageToUpload),
+                        ItemId      = _item.ItemId,
+                        ImageName   = _item.ImageName,
+                        Base64      = imageToUpload == null? null : Convert.ToBase64String(imageToUpload),
                         Description = _item.Description,
-                        Price=_item.Price,
-                        IsDeleted = false 
+                        Price       = _item.Price,
+                        IsDeleted   = false 
                     })); 
             }
         }
