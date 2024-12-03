@@ -1,20 +1,20 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
+using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 
-namespace ShopWorld.Shared.Entities
+namespace ShopWorld.MAUI.Models
 {
-    public class Employee
+    public class EmployeeModel
     {
-        [Key]
         public int EmployeeId { get; set; }
-        [StringLength(40)]
+
         public string Name { get; set; }
-        [StringLength(40)]
+
         public string Surname { get; set; }
+
         public bool IsDeleted { get; set; }
 
-        public ICollection<Order> Orders { get; set; }
     }
 }

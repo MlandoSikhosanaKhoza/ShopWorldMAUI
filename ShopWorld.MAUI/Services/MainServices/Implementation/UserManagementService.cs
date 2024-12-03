@@ -1,8 +1,9 @@
-﻿using ShopWorld.MAUI.Repository;
+﻿using ShopWorld.MAUI.Models;
+using ShopWorld.MAUI.Repository;
 using ShopWorld.MAUI.Swagger;
 using ShopWorld.MAUI.Views;
 using ShopWorld.Shared;
-using ShopWorld.Shared.Entities;
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,7 +12,7 @@ using System.Threading.Tasks;
 
 namespace ShopWorld.MAUI.Services
 {
-    public class UserManagementService:IUserManagementService
+    public class UserManagementService : IUserManagementService
     {
         private readonly ShopWorldClient _shopWorldClient;
         private IAuthorizationService _authorizationService;
@@ -21,10 +22,10 @@ namespace ShopWorld.MAUI.Services
             IAuthorizationService authorizationService,
             INavigationService navigationService,IConnectivity connectivity)
         {
-            _shopWorldClient = shopWorldClient;
+            _shopWorldClient      = shopWorldClient;
             _authorizationService = authorizationService;
-            _navigationService = navigationService;
-            _connectivity = connectivity;
+            _navigationService    = navigationService;
+            _connectivity         = connectivity;
         }
 
         public async Task<LoginResult> LoginAsUser(string Mobile)
@@ -56,9 +57,9 @@ namespace ShopWorld.MAUI.Services
             return login;
         }
 
-        public async Task<Customer> Register(Customer CustomerObj)
+        public async Task<CustomerModel> Register(CustomerModel CustomerObj)
         {
-            Customer customer=await _shopWorldClient.Customer_AddCustomerAsync(CustomerObj);
+            CustomerModel customer = await _shopWorldClient.Customer_AddCustomerAsync(CustomerObj);
             return customer;
         }
 

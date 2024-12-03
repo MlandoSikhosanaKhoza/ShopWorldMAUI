@@ -1,9 +1,10 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using ShopWorld.MAUI.Models;
 using ShopWorld.MAUI.Services;
 using ShopWorld.MAUI.Validation;
 using ShopWorld.MAUI.Views;
-using ShopWorld.Shared.Entities;
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -19,9 +20,11 @@ namespace ShopWorld.MAUI.ViewModels
         private IConnectivity _connectivity;
         public RegisterViewModel(IUserManagementService userManagementService,
             INavigationService navigationService,IConnectivity connectivity) { 
+
             _userManagementService = userManagementService;
-            _navigationService = navigationService;
-            _connectivity = connectivity;
+            _navigationService     = navigationService;
+            _connectivity          = connectivity;
+
             SetupValidation();
         }
 
@@ -57,7 +60,7 @@ namespace ShopWorld.MAUI.ViewModels
                 { 
                     if(!await _userManagementService.MobileNumberExists(Mobile.Value))
                     {
-                        await _userManagementService.Register(new Customer { Name = FirstName.Value, Surname = LastName.Value, Mobile = Mobile.Value });
+                        await _userManagementService.Register(new CustomerModel { Name = FirstName.Value, Surname = LastName.Value, Mobile = Mobile.Value });
                         await Shell.Current.DisplayAlert("Success!", "You have been successfully registers", "Continue to Login");
                         await _navigationService.NavigateToAsync($"//{nameof(LoginPage)}");
                     }

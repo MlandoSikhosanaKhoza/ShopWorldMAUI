@@ -3,7 +3,7 @@ using ShopWorld.MAUI.Repository;
 using ShopWorld.MAUI.Swagger;
 using ShopWorld.MAUI.ViewModels;
 using ShopWorld.Shared;
-using ShopWorld.Shared.Entities;
+
 using System;
 using System.Buffers.Text;
 using System.Collections.Generic;
@@ -42,26 +42,28 @@ namespace ShopWorld.MAUI.Services
             return isDownloaded;
         }
 
-        public async Task<Item> AddItemAsync(ItemInputModel item)
+        public async Task<ItemModel> AddItemAsync(ItemInputModel item)
         {
             try
             {
-                Item itemAdded = await _shopWorldClient.Item_AddItemAsync(item);
+                ItemModel itemAdded = await _shopWorldClient.Item_AddItemAsync(item);
                 if (itemAdded != null)
                 {
                     string base64 = item.Base64;
                     byte[] image = Convert.FromBase64String(base64);
+
                     FileStream fileStream = new FileStream(Constants.GenerateImageUrl(itemAdded.ImageName), FileMode.Create);
                     fileStream.Write(image, 0, image.Length);
                     fileStream.Close();
+
                     await _itemRepository.InsertAsync(new ItemModel
                     {
-                        ItemId = itemAdded.ItemId,
-                        ImageName = Constants.GenerateImageUrl(itemAdded.ImageName),
+                        ItemId      = itemAdded.ItemId,
+                        ImageName   = Constants.GenerateImageUrl(itemAdded.ImageName),
                         Description = itemAdded.Description,
-                        Price = itemAdded.Price,
-                        DateSynced = DateTime.Now,
-                        IsDeleted = itemAdded.IsDeleted
+                        Price       = itemAdded.Price,
+                        DateSynced  = DateTime.Now,
+                        IsDeleted   = itemAdded.IsDeleted
                     });
                 }
                 return itemAdded;
@@ -104,17 +106,20 @@ namespace ShopWorld.MAUI.Services
         {
             try
             {
-                Item item = await _shopWorldClient.Item_GetItemAsync(bindItemViewModel.ItemId);
-                string base64 = await _shopWorldClient.Item_GetBase64ImageForImageNameAsync(item.ImageName);
-                byte[] image = Convert.FromBase64String(base64);
+                ItemModel item = await _shopWorldClient.Item_GetItemAsync(bindItemViewModel.ItemId);
+                
+                string base64  = await _shopWorldClient.Item_GetBase64ImageForImageNameAsync(item.ImageName);
+                byte[] image   = Convert.FromBase64String(base64);
+
                 if (!System.IO.Directory.Exists(Constants.ImageDirectory))
                 {
                     System.IO.Directory.CreateDirectory(Constants.ImageDirectory);
                 }
-                string filepath = Constants.GenerateImageUrl(item.ImageName);
+                string filepath       = Constants.GenerateImageUrl(item.ImageName);
                 FileStream fileStream = new FileStream(Constants.GenerateImageUrl(item.ImageName), FileMode.Create);
                 fileStream.Write(image, 0, image.Length);
                 fileStream.Close();
+
                 ItemModel model = (await _itemRepository.GetAsync(i=>i.ItemId==bindItemViewModel.ItemId)).FirstOrDefault();
                 model.ImageName = Constants.GenerateImageUrl(item.ImageName);
                 await _itemRepository.UpdateAsync(model);
@@ -134,8 +139,8 @@ namespace ShopWorld.MAUI.Services
             try
             {
                 await _itemRepository.DeleteAllAsync();
-                List<Item> items = (List<Item>)await _shopWorldClient.Item_GetAllItemsAsync();
-                foreach (Item item in items)
+                List<ItemModel> items = (List<ItemModel>)await _shopWorldClient.Item_GetAllItemsAsync();
+                foreach (ItemModel item in items)
                 {
                     string url = "image_not_found.png";
                     await _itemRepository.InsertAsync(new ItemModel

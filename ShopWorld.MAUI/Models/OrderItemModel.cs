@@ -1,4 +1,4 @@
-﻿using ShopWorld.Shared.Entities;
+﻿
 using SQLite;
 using System;
 using System.Collections.Generic;

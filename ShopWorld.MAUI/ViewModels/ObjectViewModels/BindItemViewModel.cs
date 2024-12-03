@@ -7,7 +7,7 @@ using ShopWorld.MAUI.Models;
 using ShopWorld.MAUI.Skia;
 using ShopWorld.MAUI.Validation;
 using ShopWorld.MAUI.Views.Modal;
-using ShopWorld.Shared.Entities;
+
 using SkiaSharp;
 using System;
 using System.Collections.Generic;

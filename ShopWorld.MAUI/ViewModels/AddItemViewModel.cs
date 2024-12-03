@@ -4,7 +4,7 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using ShopWorld.MAUI.Services;
 using ShopWorld.MAUI.Validation;
 using ShopWorld.MAUI.Views;
-using ShopWorld.Shared.Entities;
+
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -14,6 +14,7 @@ using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.Input;
 using SkiaSharp;
 using static SQLite.SQLite3;
+using ShopWorld.MAUI.Models;
 
 namespace ShopWorld.MAUI.ViewModels
 {
@@ -145,14 +146,15 @@ namespace ShopWorld.MAUI.ViewModels
                 if (imageToUpload != null)
                 {
                     byte[] smallImage = imageToUpload;
-                    Item item = await _itemService.AddItemAsync(new Shared.ItemInputModel
+                    ItemModel item = await _itemService.AddItemAsync(new Shared.ItemInputModel
                     {
-                        ItemId = 0,
-                        ImageName = $"{Guid.NewGuid()}.png",
-                        Base64 = Convert.ToBase64String(smallImage),
+                        ItemId      = 0,
+                        ImageName   = $"{Guid.NewGuid()}.png",
+                        Base64      = Convert.ToBase64String(smallImage),
                         Description = Description.Value,
-                        Price = decimal.Parse(Price.Value)
+                        Price       = decimal.Parse(Price.Value)
                     });
+
                     if (item != null)
                     {
                         await _navigationService.NavigateToAsync($"//{nameof(ItemPage)}?Refresh=true");

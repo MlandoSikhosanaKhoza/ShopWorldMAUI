@@ -3,7 +3,7 @@ using ShopWorld.MAUI.Repository;
 using ShopWorld.MAUI.Swagger;
 using ShopWorld.MAUI.ViewModels;
 using ShopWorld.Shared;
-using ShopWorld.Shared.Entities;
+
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -16,7 +16,7 @@ namespace ShopWorld.MAUI.Services
     /// <summary>
     /// This service allows the user to save and manage their purchases they make both online and offline
     /// </summary>
-    public class CartService:ICartService
+    public class CartService : ICartService
     {
         private readonly IGenericRepository<CartModel> _cartRepository;
         private readonly IGenericRepository<OrderModel> _orderRepository;
@@ -24,11 +24,11 @@ namespace ShopWorld.MAUI.Services
         private readonly IAuthorizationService _authorizationService;
         private readonly ShopWorldClient _shopWorldClient;
         public CartService(IUnitOfWork unitOfWork,ShopWorldClient shopWorldClient,IAuthorizationService authorizationService) {
-            _cartRepository = unitOfWork.GetRepository<CartModel>();
-            _orderRepository = unitOfWork.GetRepository<OrderModel>();
-            _orderItemRepository = unitOfWork.GetRepository<OrderItemModel>();
+            _cartRepository       = unitOfWork.GetRepository<CartModel>();
+            _orderRepository      = unitOfWork.GetRepository<OrderModel>();
+            _orderItemRepository  = unitOfWork.GetRepository<OrderItemModel>();
             _authorizationService = authorizationService;
-            _shopWorldClient = shopWorldClient;
+            _shopWorldClient      = shopWorldClient;
         }
 
         public async Task<CartModel> GetCartModelByItemId(int ItemId)
@@ -44,51 +44,52 @@ namespace ShopWorld.MAUI.Services
 
         public async Task<bool> SyncPurchases(List<CartModel> CartItems)
         {
-            string customerId = JwtTokenReader.GetTokenValue(_authorizationService.GetToken(), "CustomerId");
-            int[] itemId=CartItems.Select(c=>c.ItemId).ToArray();
-            int[] quantityList=CartItems.Select(c=>c.Quantity).ToArray();
-            decimal total = CartItems.Sum(c => c.Quantity * c.Price);
+            string customerId  = JwtTokenReader.GetTokenValue(_authorizationService.GetToken(), "CustomerId");
+            int[] itemId       = CartItems.Select(c=>c.ItemId).ToArray();
+            int[] quantityList = CartItems.Select(c=>c.Quantity).ToArray();
+            decimal total      = CartItems.Sum(c => c.Quantity * c.Price);
             try
             {
                 #region Order Client
-                Order order = await _shopWorldClient.Order_AddOrderAsync(
-                new Order
+                OrderModel order = await _shopWorldClient.Order_AddOrderAsync(
+                new OrderModel
                 {
-                    CustomerId = int.Parse(customerId),
-                    DateCreated = DateTime.Now,
-                    OrderReference = Guid.NewGuid(),
-                    Subtotal = total,
-                    GrandTotal = (total * Convert.ToDecimal(1.15)),
+                    CustomerId            = int.Parse(customerId),
+                    DateCreated           = DateTime.Now,
+                    OrderReference        = Guid.NewGuid(),
+                    Subtotal              = total,
+                    GrandTotal            = (total * Convert.ToDecimal(1.15)),
                 });
-                List<OrderItem> orderItems=(List<OrderItem>)await _shopWorldClient.OrderItem_AddOrderItemsAsync(
+                List<OrderItemModel> orderItems = (List<OrderItemModel>)await _shopWorldClient.OrderItem_AddOrderItemsAsync(
                     new Shared.OrderItemInputModel
                     {
-                        OrderId = order.OrderId,
-                        ItemId = itemId,
+                        OrderId  = order.OrderId,
+                        ItemId   = itemId,
                         Quantity = quantityList
                     });
                 #endregion Order Client
                 #region Order Persistence
                 await _orderRepository.InsertAsync(new OrderModel
                 {
-                    OrderId= order.OrderId,
-                    CustomerId= int.Parse(customerId),
-                    DateCreated=DateTime.Now,
-                    OrderReference= order.OrderReference,
-                    VAT=order.VAT,
-                    Subtotal= total,
-                    GrandTotal= (total * Convert.ToDecimal(1.15))
+                    OrderId        = order.OrderId,
+                    CustomerId     = int.Parse(customerId),
+                    DateCreated    = DateTime.Now,
+                    OrderReference = order.OrderReference,
+                    VAT            = order.VAT,
+                    Subtotal       = total,
+                    GrandTotal     = (total * Convert.ToDecimal(1.15))
                 });
+
                 for (int i = 0; i < orderItems.Count; i++)
                 {
                     await _orderItemRepository.InsertAsync(new OrderItemModel
                     {
                         OrderItemId = orderItems[i].OrderItemId,
-                        OrderId= order.OrderId,
-                        ItemId = CartItems[i].ItemId,
+                        OrderId     = order.OrderId,
+                        ItemId      = CartItems[i].ItemId,
                         Description = CartItems[i].ItemName,
-                        Quantity = CartItems[i].Quantity,
-                        Price = CartItems[i].Price
+                        Quantity    = CartItems[i].Quantity,
+                        Price       = CartItems[i].Price
                     });
                 }
                 #endregion Order Persistence

@@ -1,4 +1,4 @@
-﻿using ShopWorld.Shared.Entities;
+﻿
 using SQLite;
 using System;
 using System.Collections.Generic;
@@ -21,6 +21,6 @@ namespace ShopWorld.MAUI.Models
         public bool IsDeleted { get; set; }
         public DateTime DateSynced { get; set; }
         [Ignore]
-        public ICollection<OrderItem> OrderItems { get; set; }
+        public ICollection<OrderItemModel> OrderItems { get; set; }
     }
 }

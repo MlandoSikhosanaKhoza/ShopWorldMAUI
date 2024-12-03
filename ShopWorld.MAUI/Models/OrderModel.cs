@@ -1,4 +1,4 @@
-﻿using ShopWorld.Shared.Entities;
+﻿
 using ShopWorld.Shared;
 using System;
 using System.Collections.Generic;
@@ -22,6 +22,6 @@ namespace ShopWorld.MAUI.Models
         public decimal Subtotal { get; set; }
         public decimal GrandTotal { get; set; }
         [Ignore]
-        public ICollection<OrderItem> OrderItems { get; set; }
+        public ICollection<OrderItemModel> OrderItems { get; set; }
     }
 }

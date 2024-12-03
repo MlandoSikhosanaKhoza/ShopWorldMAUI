@@ -2,7 +2,7 @@
 using ShopWorld.MAUI.Repository;
 using ShopWorld.MAUI.Swagger;
 using ShopWorld.Shared;
-using ShopWorld.Shared.Entities;
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -52,23 +52,23 @@ namespace ShopWorld.MAUI.Services
             {
                 string strCustomerId = JwtTokenReader.GetTokenValue(_authorizationService.GetToken(), "CustomerId");
                 int customerId = int.Parse(strCustomerId);
-                List<Order> ongoing = (List<Order>)await _shopWorldClient.Order_GetOngoingOrdersForCustomerAsync(customerId);
-                List<Order> complete = (List<Order>)await _shopWorldClient.Order_GetCompleteOrdersForCustomerAsync(customerId);
-                List<Order> receipts = new List<Order>();
+                List<OrderModel> ongoing = (List<OrderModel>)await _shopWorldClient.Order_GetOngoingOrdersForCustomerAsync(customerId);
+                List<OrderModel> complete = (List<OrderModel>)await _shopWorldClient.Order_GetCompleteOrdersForCustomerAsync(customerId);
+                List<OrderModel> receipts = new List<OrderModel>();
                 receipts.AddRange(ongoing);
                 receipts.AddRange(complete);
-                foreach (Order item in receipts)
+                foreach (OrderModel item in receipts)
                 {
                     await _orderRepository.InsertAsync(new OrderModel { 
-                        OrderId = item.OrderId,
-                        CustomerId = item.CustomerId,
-                        EmployeeId = item.EmployeeId,
-                        DateFulfilled = item.DateFulfilled,
-                        DateCreated=item.DateCreated,
-                        OrderReference= item.OrderReference,
-                        VAT=item.VAT,
-                        Subtotal=item.Subtotal,
-                        GrandTotal=item.GrandTotal
+                        OrderId        = item.OrderId,
+                        CustomerId     = item.CustomerId,
+                        EmployeeId     = item.EmployeeId,
+                        DateFulfilled  = item.DateFulfilled,
+                        DateCreated    = item.DateCreated,
+                        OrderReference = item.OrderReference,
+                        VAT            = item.VAT,
+                        Subtotal       = item.Subtotal,
+                        GrandTotal     = item.GrandTotal
                     });
                 }
                 return true;

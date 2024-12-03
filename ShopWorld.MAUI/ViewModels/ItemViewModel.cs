@@ -3,10 +3,11 @@ using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
 using Microsoft.Maui.Networking;
 using ShopWorld.MAUI.Messages;
+using ShopWorld.MAUI.Models;
 using ShopWorld.MAUI.Services;
 using ShopWorld.MAUI.Views;
 using ShopWorld.Shared;
-using ShopWorld.Shared.Entities;
+
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -39,17 +40,17 @@ namespace ShopWorld.MAUI.ViewModels
             {
                 if (message.Value.ItemId == 0)
                 {
-                    Item itemAdded = await itemService.AddItemAsync(message.Value);
+                    ItemModel itemAdded = await itemService.AddItemAsync(message.Value);
                     if (itemAdded != null)
                     {
                         Items.Add(new BindItemViewModel(new
                             Models.ItemModel
                         {
-                            ItemId = message.Value.ItemId,
+                            ItemId      = message.Value.ItemId,
                             Description = message.Value.Description,
-                            Price = message.Value.Price,
-                            DateSynced = DateTime.Now,
-                            IsDeleted = message.Value.IsDeleted
+                            Price       = message.Value.Price,
+                            DateSynced  = DateTime.Now,
+                            IsDeleted   = message.Value.IsDeleted
                         }
                         ));
                         await Shell.Current.DisplayAlert("Saved!", "Item has been successfully added!", "OK");

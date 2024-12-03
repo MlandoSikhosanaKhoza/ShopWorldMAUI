@@ -5,7 +5,7 @@ using ShopWorld.MAUI.Messages;
 using ShopWorld.MAUI.Models;
 using ShopWorld.MAUI.Services;
 using ShopWorld.MAUI.Views;
-using ShopWorld.Shared.Entities;
+
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;

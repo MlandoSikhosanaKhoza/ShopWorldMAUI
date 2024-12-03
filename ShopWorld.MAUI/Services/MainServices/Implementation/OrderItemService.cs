@@ -2,7 +2,7 @@
 using ShopWorld.MAUI.Repository;
 using ShopWorld.MAUI.Swagger;
 using ShopWorld.Shared;
-using ShopWorld.Shared.Entities;
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,20 +14,20 @@ namespace ShopWorld.MAUI.Services
     /// <summary>
     /// Your only add to the order item repository once the purchase has been made
     /// </summary>
-    public class OrderItemService:IOrderItemService
+    public class OrderItemService : IOrderItemService
     {
         private readonly IGenericRepository<OrderModel> _orderRepository;
         private readonly IGenericRepository<OrderItemModel> _orderItemRepository;
         private ShopWorldClient _shopWorldClient;
         public OrderItemService(IUnitOfWork unitOfWork,ShopWorldClient shopWorldClient) { 
-            _orderRepository = unitOfWork.GetRepository<OrderModel>();
+            _orderRepository     = unitOfWork.GetRepository<OrderModel>();
             _orderItemRepository = unitOfWork.GetRepository<OrderItemModel>();
-            _shopWorldClient = shopWorldClient;
+            _shopWorldClient     = shopWorldClient;
         }
 
         public async Task<bool> HasOrderItems()
         {
-            int count = await _orderItemRepository.CountAsync();
+            int count          = await _orderItemRepository.CountAsync();
             bool hasOrderItems = count > 0;
             return hasOrderItems;
         }
